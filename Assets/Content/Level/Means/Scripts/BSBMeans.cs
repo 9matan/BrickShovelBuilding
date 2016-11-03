@@ -412,7 +412,7 @@ namespace BSB
 	{
 	}
 
-	public interface IBSBReserves : IBSBMeansList<EBSBMeansType, IBSBReserveMeans>
+	public interface IBSBReserves : IBSBMeansList< EBSBMeansType, IBSBReserveMeans>
 	{
 		IBSBFundsMeans funds { get; }
 		IBSBWorkersMeans workers { get; }
@@ -455,6 +455,14 @@ namespace BSB
 		public BSBReserves() : 
 			base(new BSBReservesInternalContainer())
 		{
+		}
+
+		public BSBReserves(int __funds, int __workers, int __materials) :
+			base(new BSBReservesInternalContainer())
+		{
+			funds.Set(__funds);
+			workers.Set(__workers);
+			materials.Set(__materials);
 		}
 
 		[SerializeField]
