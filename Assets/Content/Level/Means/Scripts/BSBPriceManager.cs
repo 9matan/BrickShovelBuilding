@@ -12,7 +12,8 @@ namespace BSB
 		BSBPrice GetWorkerPrice(BSBPrice price);
 	}
 
-	public class BSBPriceManager : MonoBehaviour 
+	public class BSBPriceManager : MonoBehaviour,
+		IBSBPriceManager
 	{
 
 		public BSBPrice GetBuildingPrice(BSBPrice price)

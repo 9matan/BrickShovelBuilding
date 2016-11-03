@@ -8,24 +8,78 @@ namespace BSB
 	public interface IBSBMaterialsManager
 	{
 		BSBPrice materialPrice { get; }
+
+		void BuyMaterials();
+		bool TryBuyMaterials();
 	}
 
 	public class BSBMaterialsManager : MonoBehaviour,
 		IBSBMaterialsManager
 	{
 
+		public IBSBPlayerResources	playerResources
+		{
+			get { return BSBDirector.playerResources; }
+		}
+		public IBSBPriceManager		priceManager
+		{
+			get { return BSBDirector.priceManager; }
+		}
+		
 		public BSBPrice materialPrice
 		{
-			get { return _materialPrice; }
+			get { return priceManager.GetMaterialPrice(_materialPrice); }
 		}
-
-
 
 		[Header("Price")]
 		[SerializeField]
 		protected BSBPrice _materialPrice;
 		[SerializeField]
 		protected int _purchasingQuantity;
+
+		//
+		// < Initialize >
+		//
+
+		public void Initialize()
+		{
+
+		}
+
+		//
+		// </ Initialize >
+		//
+
+		public void BuyMaterials()
+		{
+			if (!TryBuyMaterials())
+				return;
+
+			playerResources.Use(materialPrice);
+			var reserves = new BSBPrice();
+			reserves.materials = _purchasingQuantity;
+			playerResources.Add(reserves);
+		}
+
+		public bool TryBuyMaterials()
+		{
+			return playerResources.Contains(materialPrice);
+		}
+
+
+		//
+		// < Clear >
+		//
+
+		public void Clear()
+		{
+
+		}
+
+		//
+		// </ Clear >
+		//
+
 
 		//
 		// < Log >

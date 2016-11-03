@@ -61,6 +61,20 @@ namespace BSB
 		}
 
 		private static BSBMaterialsManager _materialManager;
+
+
+
+		public static IBSBPriceManager priceManager
+		{
+			get
+			{
+				if (_priceManager == null || _priceManager.Equals(null))
+					_priceManager = GameObject.FindObjectOfType<BSBPriceManager>();
+				return _priceManager;
+			}
+		}
+
+		private static BSBPriceManager _priceManager;
 	}
 
 }

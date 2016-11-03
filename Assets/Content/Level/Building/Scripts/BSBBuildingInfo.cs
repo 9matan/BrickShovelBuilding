@@ -8,7 +8,10 @@ namespace BSB
 
 	public interface IBSBBuildingInfo
 	{
-		IBSBReserves GetPriceByLevel(int level);
+		int levelCount { get; }
+
+		BSBPrice	GetPriceByLevel(int level);
+		float		GetComplexityByLevel(int level);
 	}
 
 	[CreateAssetMenu(menuName = "BSB/Building/Info")]
@@ -16,15 +19,30 @@ namespace BSB
 		IBSBBuildingInfo
 	{
 
-		[SerializeField]
-		protected List<BSBPrice> _prices = new List<BSBPrice>();
-
-		public IBSBReserves GetPriceByLevel(int level)
+		[System.Serializable]
+		public struct LevelInfo
 		{
-			return new BSBReserves(_prices[level]);
+			public BSBPrice price;
+			public float complexity;
 		}
 
+		public int levelCount
+		{
+			get { return _levels.Count; }
+		}
 
+		[SerializeField]
+		protected List<LevelInfo> _levels = new List<LevelInfo>();
+
+		public BSBPrice GetPriceByLevel(int level)
+		{
+			return _levels[level].price;
+		}
+
+		public float GetComplexityByLevel(int level)
+		{
+			return _levels[level].complexity;
+		}
 
 		//
 		// < Log >

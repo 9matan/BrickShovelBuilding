@@ -11,13 +11,17 @@ namespace BSB
 	{
 		public delegate void OnBuildingBuilt(IBSBBuilding building);
 		public delegate void OnBuildingUpgraded(IBSBBuilding building);
-		public delegate void OnActionUpdate(float time);
+		public delegate void OnActionUpdate(IBSBMonoAction action);
 	}
 
 	public interface IBSBBuilding :
 		IBSBActionTimeable,
 		IBSBBuildingEvents
 	{
+		int					id { get; }
+		EBSBBuildingType	type { get; }
+		int					level { get; }
+		EBSBBuildingState	state { get; }
 	}	
 
 	public interface IBSBBuildingEvents
@@ -46,15 +50,21 @@ namespace BSB
 		IBSBBuilding
 	{
 
-		public EBSBBuildingType type
+		protected static int _ID = 0;
+
+		public int					id
+		{
+			get { return _id; }
+		}
+		public EBSBBuildingType		type
 		{
 			get { return _type; }
 		}
-		public int level
+		public int					level
 		{
 			get { return _level; }
 		}
-		public EBSBBuildingState state
+		public EBSBBuildingState	state
 		{
 			get { return _state; }
 		}
@@ -66,13 +76,15 @@ namespace BSB
 		[SerializeField]
 		protected EBSBBuildingState _state;
 
+		protected int _id;
+
 		//
 		// < Initialize >
 		//
 
 		public void Initialize()
 		{
-
+			_id = ++_ID;
 		}
 
 		//
@@ -115,12 +127,12 @@ namespace BSB
 
 		
 
-		protected void _UpdateConstruction(float time)
+		protected void _UpdateConstruction(IBSBMonoAction action)
 		{
 
 		}
 
-		protected void _UpdateUpgrade(float time)
+		protected void _UpdateUpgrade(IBSBMonoAction action)
 		{
 
 		}
@@ -257,7 +269,7 @@ namespace BSB
 			{
 				if (!pause)
 				{
-					update(currentActionTime);
+					update(this);
 					currentActionTime += Time.deltaTime;
 				}
 				yield return null;
