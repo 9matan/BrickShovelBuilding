@@ -9,7 +9,7 @@ namespace BSB
 	{
 
 		[SerializeField]
-		protected BSBReserves _reserves = new BSBReserves();
+		protected BSBReserves _reserves;
 
 
 

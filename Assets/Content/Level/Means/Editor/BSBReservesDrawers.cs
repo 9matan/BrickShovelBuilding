@@ -4,14 +4,18 @@ using System.Collections;
 
 namespace BSB
 {
-
-	[CustomPropertyDrawer(typeof(BSBReserves))]
-	public class BSBReservesInspector : PropertyDrawer
+/*
+//	[CustomPropertyDrawer(typeof(BSBReserves))]
+	public class BSBReservesDrawer : PropertyDrawer
 	{
 
 
 		protected bool _foldout = false;
 		protected float _itemHeight = 15.0f;
+
+		protected BSBReserves _reserves;
+		protected GUIContent _label;
+		protected SerializedProperty _property;
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
@@ -25,6 +29,10 @@ namespace BSB
 		{
 			EditorUtility.SetDirty(property.serializedObject.targetObject);
 
+			_label = label;
+			_property = property;
+			_CheckInitialize();			
+
 			var rect = position;
 			rect.height = _itemHeight;
 
@@ -36,27 +44,30 @@ namespace BSB
 			if (!_foldout)
 				return;
 
-			var reserves = fieldInfo.GetValue(property.serializedObject.targetObject) as IBSBReserves;
-
 			Undo.RecordObject(property.serializedObject.targetObject, "Change");
 
 			rect.x += 10.0f;
 			rect.y += rect.height;
-			_MeansField(rect, reserves.funds, "Funds");
-			rect.y += rect.height;
-			_MeansField(rect, reserves.materials, "Materials");
-			rect.y += rect.height;
-			_MeansField(rect, reserves.workers, "Workers");
 
-			property.serializedObject.ApplyModifiedProperties();
+		//	BSBEditorGUI.ReservesField(rect, _reserves);
+			_property.objectReferenceValue = _reserves;
+
+
+			_property.serializedObject.ApplyModifiedProperties();
 		}
 
-		protected void _MeansField(Rect rect, IBSBReserveMeans means, string label)
+		protected void _CheckInitialize()
 		{
-			means.Set(
-				EditorGUI.IntField(rect, new GUIContent(label), means.amount));
+			_reserves = _property.objectReferenceValue as BSBReserves;
+			if (_reserves == null)
+			{
+				_reserves = BSBReserves.Create();
+				_property.objectReferenceValue = _reserves;
+			}
+				
+		//	_foldout = EditorPrefs.GetBool(_label.text);
 		}
 
-	}
+	}*/
 
 }

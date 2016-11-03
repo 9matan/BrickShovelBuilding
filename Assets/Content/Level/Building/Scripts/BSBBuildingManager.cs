@@ -19,19 +19,27 @@ namespace BSB
 			get { return BSBDirector.playerResources; }
 		}
 
+		[SerializeField]
+		protected BSBBuildingInfoContainer _infoContainer;
 
 		//
 		// < Upgrade >
 		//
 
-		public IBSBReserves UpgradePrice(IBSBBuilding build)
+		public IBSBReserves UpgradePrice(IBSBBuilding building)
 		{
 			return null;
 		}
 
-		public void UpgradeBuilding(IBSBBuilding build)
+		public void UpgradeBuilding(IBSBBuilding building)
 		{
 
+		}
+
+		public bool TryBuild(IBSBBuilding building)
+		{
+			return playerResources.Contains(
+				UpgradePrice(building));
 		}
 
 		//
@@ -72,12 +80,20 @@ namespace BSB
 		{
 			if(debug)
 				Debug.Log(msg);
-		}		
+		}
 
 		//
 		// </ Log >
 		//
+
+
 		
+
 	}
+
+	
+	[System.Serializable]
+	public class BSBBuildingInfoContainer : VOSSerializableDictionary<EBSBBuildingType, BSBBuildingInfo> { }
+
 
 }

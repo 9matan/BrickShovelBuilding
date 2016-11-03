@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using BSB;
-using System;
 using System.Collections.Generic;
 
 namespace BSB
@@ -9,9 +8,11 @@ namespace BSB
 
 	public interface IBSBPlayerResources
 	{
-		IBSBFundsMeans funds { get; }
-		IBSBWorkersMeans workers { get; }
-		IBSBMaterialsMeans materials { get; }
+		IBSBReserveStorage funds { get; }
+		IBSBReserveStorage workers { get; }
+		IBSBReserveStorage materials { get; }
+
+		
 
 		void Use(IBSBReserves __reserves);
 		bool Contains(IBSBReserves __reserves);
@@ -22,30 +23,47 @@ namespace BSB
 		IBSBPlayerResources
 	{
 
-		public IBSBFundsMeans funds
+		public IBSBReserveStorage funds
 		{
 			get
 			{
 				return _reserves.funds;
 			}
 		}
-		public IBSBWorkersMeans workers
+		public IBSBReserveStorage workers
 		{
 			get
 			{
 				return _reserves.workers;
 			}
 		}
-		public IBSBMaterialsMeans materials
+		public IBSBReserveStorage materials
 		{
 			get
 			{
 				return _reserves.materials;
 			}
 		}
-		
-		[SerializeField]
-		protected BSBReserves _reserves = new BSBReserves();
+
+		protected BSBReservesStorage _reserves;
+
+		//
+		// < Initialize >
+		//
+	
+		public void Initialize()
+		{
+			_InitializeReserves();
+		}
+
+		protected void _InitializeReserves()
+		{
+			_reserves = new BSBReservesStorage();
+		}
+
+		//
+		// </ Initialize >
+		//
 
 		public void Use(IBSBReserves __reserves)
 		{

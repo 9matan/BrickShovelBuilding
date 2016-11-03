@@ -20,6 +20,7 @@ namespace BSB
 
 		private static BSBPlayerResources _playerResources;	
 
+
 	
 		public static IBSBBuildingManager buildingManager
 		{			
@@ -33,6 +34,33 @@ namespace BSB
 
 		private static BSBBuildingManager _buildingManager;
 
+
+
+		public static IBSBWorkerManager workerManager
+		{
+			get
+			{
+				if (_workerManager == null || _workerManager.Equals(null))
+					_workerManager = GameObject.FindObjectOfType<BSBWorkerManager>();
+				return _workerManager;
+			}
+		}
+
+		private static BSBWorkerManager _workerManager;
+
+
+
+		public static IBSBMaterialsManager materialManager
+		{
+			get
+			{
+				if (_materialManager == null || _materialManager.Equals(null))
+					_materialManager = GameObject.FindObjectOfType<BSBMaterialsManager>();
+				return _materialManager;
+			}
+		}
+
+		private static BSBMaterialsManager _materialManager;
 	}
 
 }
