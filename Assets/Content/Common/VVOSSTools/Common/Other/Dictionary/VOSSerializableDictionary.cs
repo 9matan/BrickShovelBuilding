@@ -8,9 +8,9 @@ public class VOSSerializableDictionary<TKey, TValue> :
 	ISerializationCallbackReceiver
 {
 	[SerializeField]//, HideInInspector]
-	private List<TKey> _keys;
+	private List<TKey> _keys = new List<TKey>();
 	[SerializeField]//, HideInInspector]
-	private List<TValue> _values;
+	private List<TValue> _values = new List<TValue>();
 
 	protected Dictionary<TKey, TValue> _container = new Dictionary<TKey, TValue>();
 
