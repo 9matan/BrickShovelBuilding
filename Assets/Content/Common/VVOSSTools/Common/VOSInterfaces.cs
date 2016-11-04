@@ -6,7 +6,7 @@ public interface IVOSTransformable
 	Transform transform { get; }
 }
 
-public interface IVOSInitialize
+public interface IVOSInitializable
 {
 	void Initialize();
 }

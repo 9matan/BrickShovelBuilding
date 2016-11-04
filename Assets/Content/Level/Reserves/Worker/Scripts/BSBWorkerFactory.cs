@@ -5,13 +5,15 @@ using BSB;
 namespace BSB
 {
 
-	public class BSBLevelTest : MonoBehaviour 
-	{
+	public class BSBWorkerFactory : VOSComponentPoolFactory<BSBWorker>
+	{	
+	
+
 
 		//
 		// < Log >
 		//
-
+		
 		public bool debug = false;
 				
 		public void Log(object msg)

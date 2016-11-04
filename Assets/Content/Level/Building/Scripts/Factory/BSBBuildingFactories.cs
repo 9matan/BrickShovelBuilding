@@ -5,13 +5,13 @@ using BSB;
 namespace BSB
 {
 
-	public class BSBLevelTest : MonoBehaviour 
-	{
-
+	public class BSBBuildingFactories : VOSComponentPoolFactoriesContainer<
+		EBSBBuildingType, BSBBuildingFactory, BSBBuilding>
+	{	
 		//
 		// < Log >
 		//
-
+		
 		public bool debug = false;
 				
 		public void Log(object msg)
@@ -22,8 +22,7 @@ namespace BSB
 
 		//
 		// </ Log >
-		//
-		
+		//		
 	}
 
 }

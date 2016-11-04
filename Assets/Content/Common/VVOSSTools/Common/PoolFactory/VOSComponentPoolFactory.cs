@@ -1,19 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface IVOSComponentPoolFactory<I, C> :
-	IVOSPoolFactory<I>
-	where I : IVOSTransformable
-	where C : Component, I
+public interface IVOSComponentPoolFactory<C> :
+	IVOSPoolFactory<C>
+	where C : Component
 {
 	IVOSComponentCreator creator { get; }
 }
 
-public class VOSComponentPoolFactory<I, C> : VOSPoolFactory<I>,
-	IVOSComponentPoolFactory<I, C>,
+public class VOSComponentPoolFactory<C> : VOSPoolFactory<C>,
+	IVOSComponentPoolFactory<C>,
 	IVOSBuilder
-	where I : IVOSTransformable
-	where C : Component, I
+	where C : Component
 {
 
 	public IVOSComponentCreator creator { get { return _creatorImplementer; } }
@@ -24,12 +22,12 @@ public class VOSComponentPoolFactory<I, C> : VOSPoolFactory<I>,
 	[SerializeField]
 	protected VOSComponentCreator _creatorImplementer;
 
-	protected override I _Create()
+	protected override C _Create()
 	{
 		return creator.Create<C>();
 	}
 
-	public override I Allocate()
+	public override C Allocate()
 	{
 		var item = base.Allocate();
 
@@ -39,7 +37,7 @@ public class VOSComponentPoolFactory<I, C> : VOSPoolFactory<I>,
 		return item;
 	}
 
-	protected override void _FreeItem(I item)
+	protected override void _FreeItem(C item)
 	{
 		item.transform.parent = transform;
 

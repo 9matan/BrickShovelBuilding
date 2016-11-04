@@ -5,13 +5,19 @@ using BSB;
 namespace BSB
 {
 
-	public class BSBLevelTest : MonoBehaviour 
+	public class BSBHouseBuildingInfo : MonoBehaviour 
 	{
 
+		
+	
+	
+	
+	
+	
 		//
 		// < Log >
 		//
-
+		
 		public bool debug = false;
 				
 		public void Log(object msg)

@@ -4,15 +4,41 @@ using System.Collections.Generic;
 using BSB;
 
 namespace BSB
-{
+{	
 
-	public interface IBSBBuildingManager
+	public interface IBSBBuildingManager :
+		IBSBBuildingInfoManager,
+		IBSBBuildingManagerEvents
 	{
+		IBSBBarracksBuildingManager barracksManager { get; }
 
+		IBSBBuilding	BuildBuilding(EBSBBuildingType type);
+		bool			TryBuild(EBSBBuildingType type);
+
+		void UpgradeBuilding(IBSBBuilding building);
+		bool TryUpgrade(IBSBBuilding building);
+	}
+
+	public interface IBSBBuildingManagerEvents
+	{
+		event Events.OnBuildingAction onBuildingBuild;
+		event Events.OnBuildingAction onBuildingBuilt;
+		event Events.OnBuildingAction onBuildingUpgrade;
+		event Events.OnBuildingAction onBuildingUpgraded;
+	}
+
+	public interface IBSBBuildingInfoManager
+	{
+		int			MaxBuildingLevel(IBSBBuilding building);
+		BSBPrice	UpgradePrice(IBSBBuilding building);
+		float		UpgradeTime(IBSBBuilding building);
+		BSBPrice	BuildPrice(EBSBBuildingType type);
+		float		BuildTime(EBSBBuildingType type);
 	}
 
 	public class BSBBuildingManager : MonoBehaviour,
-		IBSBBuildingManager
+		IBSBBuildingManager,
+		IVOSInitializable
 	{
 
 		public IBSBPlayerResources	playerResources
@@ -24,11 +50,27 @@ namespace BSB
 			get { return BSBDirector.priceManager; }
 		}
 
+		public IBSBBarracksBuildingManager barracksManager
+		{
+			get { return _barracksManagerImp; }
+		}
+
 		[SerializeField]
-		protected BSBBuildingInfoContainer		_infoContainer;
+		protected BSBBuildingInfoContainer	_infoContainer;
+		[SerializeField]
+		protected BSBBuildingFactories		_factories;
+
+		[Header("Managers")]
+		[SerializeField]
+		protected BSBBarracksBuildingManager _barracksManagerImp;
 
 		protected Dictionary<int, BSBBuilding>	_buildings = new Dictionary<int, BSBBuilding>();
 
+
+		public void Initialize()
+		{
+			_factories.Initialize();
+		}
 
 		public int MaxBuildingLevel(IBSBBuilding building)
 		{
@@ -59,6 +101,7 @@ namespace BSB
 
 			_UpgradeByilding(
 				_GetBuildingById(building.id));
+			_OnBuildingUpgrade(building);
 		}
 
 		public bool TryUpgrade(IBSBBuilding building)
@@ -109,6 +152,7 @@ namespace BSB
 			var building = _CreateBuilding(type);
 			_BuildBuilding(building);
 			_AddBuilding(building);
+			_OnBuildingBuild(building);
 			
 			return building;
 		}
@@ -139,7 +183,15 @@ namespace BSB
 
 		protected void _AddBuilding(BSBBuilding building)
 		{
+			_ListenBuilding(building);
 			_buildings.Add(building.id, building);
+
+			switch(building.type)
+			{
+				case EBSBBuildingType.BARRACKS:
+
+					break;
+			}
 		}
 
 		protected BSBBuilding _GetBuildingById(int id)
@@ -151,7 +203,16 @@ namespace BSB
 		
 		protected BSBBuilding _CreateBuilding(EBSBBuildingType type)
 		{
-			return null;
+			var building = _factories.Allocate(type);
+			return building;
+		}
+
+
+
+		protected void _ListenBuilding(IBSBBuilding building)
+		{
+			building.onBuildingBuilt += _OnBuildingBuilt;
+			building.onBuildingUpgraded += _OnBuildingUpgraded;
 		}
 
 		//
@@ -162,6 +223,39 @@ namespace BSB
 		{
 			playerResources.Restore(listener.data);
 		}
+
+		//
+		// < Events >
+		//
+
+		public event Events.OnBuildingAction onBuildingBuild = delegate { };
+		public event Events.OnBuildingAction onBuildingBuilt = delegate { };
+		public event Events.OnBuildingAction onBuildingUpgrade = delegate { };
+		public event Events.OnBuildingAction onBuildingUpgraded = delegate { };
+
+		protected void _OnBuildingBuild(IBSBBuilding building)
+		{
+			onBuildingBuild(building);
+		}
+
+		protected void _OnBuildingBuilt(IBSBBuilding building)
+		{
+			onBuildingBuilt(building);
+		}
+
+		protected void _OnBuildingUpgrade(IBSBBuilding building)
+		{
+			onBuildingUpgrade(building);
+		}
+
+		protected void _OnBuildingUpgraded(IBSBBuilding building)
+		{
+			onBuildingUpgraded(building);
+		}
+
+		//
+		// </ Events >
+		//
 
 		//
 		// < Log >
@@ -240,10 +334,8 @@ namespace BSB
 		}
 
 	}
-
 	
 	[System.Serializable]
 	public class BSBBuildingInfoContainer : VOSSerializableDictionary<EBSBBuildingType, BSBBuildingInfo> { }
-
 
 }

@@ -9,8 +9,7 @@ namespace BSB
 
 	namespace Events
 	{
-		public delegate void OnBuildingBuilt(IBSBBuilding building);
-		public delegate void OnBuildingUpgraded(IBSBBuilding building);
+		public delegate void OnBuildingAction(IBSBBuilding building);
 		public delegate void OnActionUpdate(IBSBMonoAction action);
 	}
 
@@ -26,14 +25,14 @@ namespace BSB
 
 	public interface IBSBBuildingEvents
 	{
-		event OnBuildingBuilt onBuildingBuilt;
-		event OnBuildingUpgraded onBuildingUpgraded;
+		event OnBuildingAction onBuildingBuilt;
+		event OnBuildingAction onBuildingUpgraded;
 	}
 
 	public enum EBSBBuildingType
 	{
 		NONE,
-		BARRACK,
+		BARRACKS,
 		HOUSE,
 		SHOP
 	}
@@ -69,7 +68,7 @@ namespace BSB
 			get { return _state; }
 		}
 
-		[SerializeField]
+	//	[SerializeField]
 		protected EBSBBuildingType _type;
 		[SerializeField]
 		protected int _level;
@@ -141,8 +140,8 @@ namespace BSB
 		// < Events >
 		//
 
-		public event OnBuildingBuilt onBuildingBuilt = delegate { };
-		public event OnBuildingUpgraded onBuildingUpgraded = delegate { };
+		public event OnBuildingAction onBuildingBuilt = delegate { };
+		public event OnBuildingAction onBuildingUpgraded = delegate { };
 
 		protected void _OnBuilt()
 		{

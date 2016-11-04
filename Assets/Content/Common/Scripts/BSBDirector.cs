@@ -32,6 +32,16 @@ namespace BSB
 			}			
 		}
 
+		public static IBSBBarracksBuildingManager barracksManager
+		{
+			get
+			{
+				if (buildingManager == null)
+					return null;
+				return buildingManager.barracksManager;
+			}
+		}
+
 		private static BSBBuildingManager _buildingManager;
 
 

@@ -43,22 +43,6 @@ namespace BSB
 		{
 			return _levels[level].complexity;
 		}
-
-		//
-		// < Log >
-		//
-
-		public bool debug = false;
-				
-		public void Log(object msg)
-		{
-			if(debug)
-				Debug.Log(msg);
-		}		
-
-		//
-		// </ Log >
-		//
 		
 	}
 

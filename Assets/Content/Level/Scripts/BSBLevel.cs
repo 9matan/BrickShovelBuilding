@@ -5,13 +5,23 @@ using BSB;
 namespace BSB
 {
 
-	public class BSBLevelTest : MonoBehaviour 
+	public class BSBLevel : MonoBehaviour 
 	{
 
+		
+		public void Initialize()
+		{
+
+		}
+	
+	
+	
+	
+	
 		//
 		// < Log >
 		//
-
+		
 		public bool debug = false;
 				
 		public void Log(object msg)
