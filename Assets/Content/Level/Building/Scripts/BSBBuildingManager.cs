@@ -31,6 +31,9 @@ namespace BSB
 
 	public interface IBSBBuildingInfoManager
 	{
+		List<IBSBObjectOperation> GetOperations(IBSBBuilding ibuilding);
+		IBSBObjectOperationInfo GetBuildOperationInfo(EBSBBuildingType type);
+
 		int			MaxBuildingLevel(IBSBBuilding building);
 		BSBPrice	UpgradePrice(IBSBBuilding building);
 		float		UpgradeTime(IBSBBuilding building);
@@ -387,6 +390,60 @@ namespace BSB
 		//
 		// </ Events >
 		//
+
+		public List<IBSBObjectOperation> GetOperations(IBSBBuilding ibuilding)
+		{
+			var list = _GetOperationsList(ibuilding);
+			var building = _GetBuildingById(ibuilding.id);
+
+			list.Add(
+				_GetUpgradeOperation(building));
+
+			return list;
+		}
+
+		protected List<IBSBObjectOperation> _GetOperationsList(IBSBBuilding building)
+		{
+			List<IBSBObjectOperation> list = new List<IBSBObjectOperation>();
+
+			switch (building.type)
+			{
+				case EBSBBuildingType.BARRACKS:
+					list = _barracksManager.GetOperations(building);
+					break;
+				case EBSBBuildingType.SHOP:
+					list = _shopManager.GetOperations(building);
+					break;
+				case EBSBBuildingType.HOUSE:
+					list = _houseManager.GetOperations(building);
+					break;
+			}
+
+			return list;
+		}
+
+		protected BSBObjectOperation _GetUpgradeOperation(BSBBuilding building)
+		{
+			return BSBObjectOperation.Create(
+				(IBSBObjectOperation oper) =>
+				{
+					if (oper.IsValid())
+					{
+						UpgradeBuilding(building);
+					}
+				},
+				BSBObjectOperationInfo.Create(_infoContainer[building.type].upgradeOperationSprite),
+				(IBSBObjectOperation oper) =>
+				{
+					return building.id >= 0 && TryUpgrade(building) && building.state == EBSBBuildingState.IDLE;
+				}
+				);
+		}
+
+		public IBSBObjectOperationInfo GetBuildOperationInfo(EBSBBuildingType type)
+		{
+			return BSBObjectOperationInfo.Create(_infoContainer[type].buildOperationSprite);
+		}
 
 		//
 		// < Log >

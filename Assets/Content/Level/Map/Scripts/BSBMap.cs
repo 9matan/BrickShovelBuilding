@@ -6,13 +6,29 @@ using BSB;
 namespace BSB
 {
 
-	public interface IBSBMap
+	namespace Events
 	{
+		public delegate void OnMapAction(IBSBMap map);
+	}
+	
+
+	public interface IBSBMap :
+		IBSBMapEvents
+	{
+		bool selectionOn { get; set; }
+
+		List<IBSBObjectOperation> GetEmptyOperations(IBSBMapEmptyItem empty);
+
 		IBSBMapPlacement	GetRandomEmptyPlacement();
 		IBSBMapPlacement	GetPlacementByWorldPosition(Vector3 worldPosition);
 		void				SetMapItem(IBSBMapPlacement iplacement, IBSBMapItem item);
-		bool SetMapItemToRandomEmptyPlacement(IBSBMapItem item);
+		bool				SetMapItemToRandomEmptyPlacement(IBSBMapItem item);
 		void				ClearPlacement(IBSBMapPlacement iplacement);
+	}
+
+	public interface IBSBMapEvents
+	{
+		event Events.OnMapAction onPlacementSelected;
 	}
 
 	public class BSBMap : MonoBehaviour,
@@ -20,8 +36,38 @@ namespace BSB
 		IVOSInitializable
 	{
 
+		public IBSBBuildingManager			buildingManager
+		{
+			get { return BSBDirector.buildingManager; }
+		}
+		public IBSBHouseBuildingManager		houseManager
+		{
+			get { return BSBDirector.houseManager; }
+		}
+		public IBSBShopBuildingManager		shopManager
+		{
+			get { return BSBDirector.shopManager; }
+		}
+		public IBSBBarracksBuildingManager	barracksManager
+		{
+			get { return BSBDirector.barracksManager; }
+		}
+
+		public new Camera	camera
+		{
+			get { return BSBDirector.camera; }
+		}
+		public bool			selectionOn
+		{
+			get; set;
+		}
+
 		[SerializeField]
 		protected BSBMapEmptyItemFactory _emptyFactory;
+		[SerializeField]
+		protected VOSManipulator _manipulator;
+
+		protected IBSBMapPlacement _activePlacement = null;
 
 		protected Dictionary<int, BSBMapPlacement> _placementsContainer = new Dictionary<int, BSBMapPlacement>();
 
@@ -32,8 +78,11 @@ namespace BSB
 
 		public void Initialize()
 		{
+			selectionOn = true;
+
 			_emptyFactory.Initialize();
 			_InitializePlacements();
+			_ListenManipulator(_manipulator);
 		}
 
 		protected void _InitializePlacements()
@@ -49,6 +98,11 @@ namespace BSB
 		}
 
 
+
+		protected void _ListenManipulator(IVOSManipulator manipulator)
+		{
+			manipulator.onPressed += _OnManipulatorPressed;
+		}
 
 		protected void _AddPlacement(BSBMapPlacement placement)
 		{
@@ -139,7 +193,75 @@ namespace BSB
 			_emptyFactory.Free(item);
 		}
 
+		//
+		// < Manipulator >
+		//
 
+		protected void _OnManipulatorPressed(IVOSManipulator control)
+		{
+			if (!selectionOn) return;
+
+			var position = control.ToWorldPosition(camera);
+
+			Log("Pos: " + position);
+			_activePlacement = GetPlacementByWorldPosition(position);
+			if (_activePlacement != null)
+				Log("Active: " + _activePlacement.id);
+			_OnPlacementSelected();
+		}
+
+		//
+		// </ Manipulator >
+		//
+
+		//
+		// < Events >
+		//
+
+		public event Events.OnMapAction onPlacementSelected = delegate { };
+
+		protected void _OnPlacementSelected()
+		{
+			onPlacementSelected(this);
+		}
+
+		//
+		// < Events >
+		//
+
+		public List<IBSBObjectOperation> GetEmptyOperations(IBSBMapEmptyItem empty)
+		{
+			var list = new List<IBSBObjectOperation>();
+
+			list.Add(
+				_GetBuildOperation(empty, EBSBBuildingType.HOUSE));
+			list.Add(
+				_GetBuildOperation(empty, EBSBBuildingType.BARRACKS));
+			list.Add(
+				_GetBuildOperation(empty, EBSBBuildingType.SHOP));
+
+			return list;
+		}
+
+		protected BSBObjectOperation _GetBuildOperation(IBSBMapEmptyItem empty, EBSBBuildingType type)
+		{
+			return BSBObjectOperation.Create(
+				(IBSBObjectOperation oper) =>
+				{
+					if (oper.IsValid())
+					{
+						var building = buildingManager.BuildBuilding(type);
+						var placement = empty.mapPlacement;
+						SetMapItem(placement, building);
+					}
+				},
+				buildingManager.GetBuildOperationInfo(type),
+				(IBSBObjectOperation oper) =>
+				{
+					return buildingManager.TryBuild(type);
+				}
+				);
+		}
 
 		//
 		// < Log >

@@ -160,6 +160,19 @@ namespace BSB
 
 
 
+		public static IBSBLevelCanvas levelCanvas
+		{
+			get
+			{
+				if (_levelCanvas == null || _levelCanvas.Equals(null))
+					_levelCanvas = GameObject.FindObjectOfType<BSBLevelCanvas>();
+				return _levelCanvas;
+			}
+		}
+
+		private static BSBLevelCanvas _levelCanvas;
+
+
 		public static IBSBTimeManager timeManager
 		{
 			get

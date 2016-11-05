@@ -95,12 +95,36 @@ namespace BSB
 		{
 			if(debug)
 				Debug.Log(msg);
-		}		
+		}
 
 		//
 		// </ Log >
 		//
-		
+
+#if UNITY_EDITOR
+
+		[SerializeField]
+		protected BSBCameraController _cameraController;
+		[SerializeField]
+		protected BSBLevelCanvas _levelCanvas;
+
+		[SerializeField]
+		protected float _levelSize;
+
+		[ContextMenu("Update level size")]
+		public void UpdateLevelSize()
+		{
+			_cameraController.size = _levelSize;
+
+			var csize = _cameraController.realCameraArea * 100.0f;
+			var crect = _levelCanvas.canvas.GetComponent<RectTransform>();
+
+			crect.SetSize(csize);
+		}
+
+
+#endif
+
 	}
 
 }

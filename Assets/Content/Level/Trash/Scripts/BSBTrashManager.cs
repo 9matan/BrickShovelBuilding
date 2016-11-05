@@ -8,6 +8,8 @@ namespace BSB
 
 	public interface IBSBTrashManager
 	{
+		List<IBSBObjectOperation> GetOperations(IBSBTrash trash);
+
 		BSBPrice CleaningTrashPrice(IBSBTrash trash);
 		bool TryCleaningTrash(IBSBTrash trash);
 		void CleaningTrash(IBSBTrash itrash);
@@ -112,6 +114,35 @@ namespace BSB
 		protected void _FreeTrash(BSBTrash trash)
 		{
 			_factory.Free(trash);
+		}
+
+		public List<IBSBObjectOperation> GetOperations(IBSBTrash itrash)
+		{
+			var list = new List<IBSBObjectOperation>();
+			var trash = _GetTrashById(itrash.id);
+
+			list.Add(
+				_GetCleaningOperation(trash));
+
+			return list;
+		}
+
+		protected BSBObjectOperation _GetCleaningOperation(BSBTrash trash)
+		{
+			return BSBObjectOperation.Create(
+				(IBSBObjectOperation oper) =>
+				{
+					if (oper.IsValid())
+					{
+						CleaningTrash(trash);
+					}
+				},
+				BSBObjectOperationInfo.Create(_info.cleaningOperationSprite),
+				(IBSBObjectOperation oper) =>
+				{
+					return TryCleaningTrash(trash);
+				}
+				);
 		}
 
 		//

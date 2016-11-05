@@ -15,6 +15,7 @@ namespace BSB
 		bool isSoldOut { get; }
 		int maxHealth { get; }
 		int health { get; }
+		bool isHealthFull { get; }
 	}
 
 	public class BSBHouseBuilding : BSBBuilding,
@@ -30,15 +31,19 @@ namespace BSB
 		{
 			get { return _isSoldOut; }
 		}
-		public int maxHealth
+		public int	maxHealth
 		{
 			get { return _maxHealth; }
 			set { _maxHealth = value; }
 		}
-		public int health
+		public int	health
 		{
 			get { return _health; }
 			set { _health = value; }
+		}
+		public bool isHealthFull
+		{
+			get { return health == maxHealth; }
 		}
 
 		[SerializeField]

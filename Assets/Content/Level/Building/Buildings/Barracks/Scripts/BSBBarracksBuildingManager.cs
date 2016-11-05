@@ -130,6 +130,12 @@ namespace BSB
 		// </ Events >
 		//
 
+		public List<IBSBObjectOperation> GetOperations(IBSBBuilding building)
+		{
+			var list = new List<IBSBObjectOperation>();	
+			return list;
+		}
+
 		//
 		// < Log >
 		//

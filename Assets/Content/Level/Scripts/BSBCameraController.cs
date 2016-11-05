@@ -8,6 +8,11 @@ namespace BSB
 	public interface IBSBCameraController
 	{
 		Camera camera { get; }
+
+		float worldTopBound { get; }
+		float worldBottomBound { get; }
+		float worldLeftBound { get; }
+		float worldRightBound { get; }
 	}
 
 	public class BSBCameraController : MonoBehaviour,
@@ -19,12 +24,54 @@ namespace BSB
 			get { return _camera; }
 		}
 
+		public float worldTopBound
+		{
+			get
+			{
+				return transform.position.y + realCameraArea.y - _cameraArea.y;
+			}
+		}
+		public float worldBottomBound
+		{
+			get
+			{
+				return transform.position.y - realCameraArea.y + _cameraArea.y;
+			}
+		}
+		public float worldLeftBound
+		{
+			get
+			{
+				return transform.position.x - realCameraArea.x + _cameraArea.x;
+			}
+		}
+		public float worldRightBound
+		{
+			get
+			{
+				return transform.position.x + realCameraArea.x - _cameraArea.x;
+			}
+		}
+		
+		
+
+		public Vector2 realCameraArea
+		{
+			get { return _cameraArea * _size; }
+		}
+
+		public float size
+		{
+			get { return _size; }
+			set { _size = value; }
+		}
+
 		[SerializeField]
 		protected Camera _camera;
 		[SerializeField]
 		protected Vector2 _cameraArea = new Vector2(15.0f, 5.0f);
-	
-	
+		[SerializeField]
+		protected float _size = 1.0f;	
 	
 	
 		//
@@ -52,7 +99,7 @@ namespace BSB
 
 		public void GizmosDrawArea()
 		{
-			Gizmos.DrawWireCube(transform.position, _cameraArea);
+			Gizmos.DrawWireCube(transform.position, realCameraArea);
 		}
 
 #endif

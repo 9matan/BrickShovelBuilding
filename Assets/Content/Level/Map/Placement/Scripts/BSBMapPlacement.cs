@@ -44,9 +44,11 @@ namespace BSB
 		protected Vector2 _triggerArea = new Vector2(1.0f, 1.0f);
 //		[SerializeField]
 //		protected SpriteRenderer _spriter;
+		[SerializeField]
+		protected int _id;
 
 		protected IBSBMapItem	_mapItem;
-		protected int			_id;
+		
 
 		public void Initialize()
 		{

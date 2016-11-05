@@ -41,6 +41,10 @@ namespace BSB
 		{
 			get { return BSBDirector.barracksManager; }
 		}
+		public IBSBShopBuildingManager		shopManager
+		{
+			get { return BSBDirector.shopManager; }
+		}
 		public IBSBPriceManager				priceManager
 		{
 			get { return BSBDirector.priceManager; }
@@ -139,9 +143,15 @@ namespace BSB
 			events.onBarracksUpgraded += _OnBarracksUpgraded;
 		}
 
+		protected void _ListenShopManager(IBSBShopBuildingManagerEvents events)
+		{
+			events.onShopBuilt += _OnShopBuilt;
+			events.onShopUpgraded+= _OnShopUpgraded;
+		}
+
 		protected void _ListenTimeManager(IBSBTimeManagerEvents events)
 		{
-			events.onMonthEnded += _UpdateIncome;
+			events.onMonthEnded += _AddIncome;
 		}
 
 		//
@@ -202,13 +212,28 @@ namespace BSB
 			_UpdateWorkersCapacity(barracks.upgradedCapacity);
 		}
 
+		protected void _OnShopBuilt(IBSBShopBuilding shop)
+		{
+			_UpdateIncome();
+		}
+
+		protected void _OnShopUpgraded(IBSBShopBuilding shop)
+		{
+			_UpdateIncome();
+		}
+
 		//
 		// </ Building events >
 		//
 
-		protected void _UpdateIncome()
+		protected void _AddIncome()
 		{
 			Add(income);
+		}
+
+		protected void _UpdateIncome()
+		{
+			_income = shopManager.GetTotalIncome();
 		}
 
 		protected void _UpdateWorkersCapacity(int delta)

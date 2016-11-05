@@ -7,6 +7,7 @@ namespace BSB
 
 	public interface IBSBTrashInfo
 	{
+		Sprite cleaningOperationSprite { get; }
 		BSBPrice GetCleaningPrice();
 	}
 
@@ -15,6 +16,13 @@ namespace BSB
 		 IBSBTrashInfo
 	{
 
+		public Sprite cleaningOperationSprite
+		{
+			get { return _cleaningOperationSprite; }
+		}
+
+		[SerializeField]
+		protected Sprite _cleaningOperationSprite;
 		[SerializeField]
 		protected BSBPrice _cleaningPrice;
 	

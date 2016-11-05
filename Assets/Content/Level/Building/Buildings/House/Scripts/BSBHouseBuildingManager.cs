@@ -67,8 +67,13 @@ namespace BSB
 				_info.GetSellPriceByLevel(house.level));
 		}
 	
-		public void SellHouse(IBSBHouseBuilding house)
+		public void SellHouse(IBSBHouseBuilding ihouse)
 		{
+			var house = _GetHouseById(ihouse.id);
+
+			house.maxHealth = house.health = _info.GetHealthByLevel(house.level);
+			house.SellHouse();
+
 			playerResources.Add(
 				GetHouseSellPrice(house));
 		}
@@ -141,6 +146,11 @@ namespace BSB
 		// < Events >
 		//
 
+		public void OnHauseUpgraded()
+		{
+
+		}
+
 		protected void _OnHouseDestruction(IBSBBuilding house)
 		{
 			buildingManager.RemoveBuilding(house);
@@ -149,6 +159,61 @@ namespace BSB
 		//
 		// </ Events >
 		//
+
+		public List<IBSBObjectOperation> GetOperations(IBSBBuilding building)
+		{
+			var list = new List<IBSBObjectOperation>();
+			var house = _GetHouseById(building.id);
+
+			list.Add(
+				_GetRepairOperation(house));
+			list.Add(
+				_GetSellOperation(house));
+
+			return list;
+		}
+
+		protected BSBObjectOperation _GetRepairOperation(BSBHouseBuilding house)
+		{
+			return BSBObjectOperation.Create(
+				(IBSBObjectOperation oper) =>
+				{
+					if (oper.IsValid())
+					{
+						RepairHouse(house);
+					}
+				},
+				BSBObjectOperationInfo.Create(_info.repairOperationSprite),
+				(IBSBObjectOperation oper) => 
+				{
+					return house.id >= 0 
+					&& house.isSoldOut 
+					&& !house.isHealthFull 
+					&& TryRepairHouse(house)
+					&& house.state == EBSBBuildingState.IDLE;
+				}
+				);
+		}
+
+		protected BSBObjectOperation _GetSellOperation(BSBHouseBuilding house)
+		{
+			return BSBObjectOperation.Create(
+				(IBSBObjectOperation oper) =>
+				{
+					if (oper.IsValid())
+					{
+						SellHouse(house);
+					}
+				},
+				BSBObjectOperationInfo.Create(_info.sellOperationSprite),
+				(IBSBObjectOperation oper) =>
+				{
+					return house.id >= 0 
+					&& !house.isSoldOut
+					&& house.state == EBSBBuildingState.IDLE;
+				}
+				);
+		}
 
 		//
 		// < Log >

@@ -6,8 +6,14 @@ using System;
 namespace BSB
 {
 
-	public class BSBMapEmptyItem : MonoBehaviour,
+	public interface IBSBMapEmptyItem :
 		IBSBMapItem
+	{
+
+	}
+
+	public class BSBMapEmptyItem : MonoBehaviour,
+		IBSBMapEmptyItem
 	{
 
 		public int id

@@ -188,7 +188,7 @@ namespace BSB
 			onBuildingBuilt(this);
 		}
 
-		protected void _OnUpgraded()
+		protected virtual void _OnUpgraded()
 		{
 			++_level;
 			_state = EBSBBuildingState.IDLE;

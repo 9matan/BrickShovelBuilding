@@ -10,6 +10,9 @@ namespace BSB
 	{
 		int levelCount { get; }
 
+		Sprite		upgradeOperationSprite { get; }
+		Sprite		buildOperationSprite { get; }
+
 		BSBPrice	GetPriceByLevel(int level);
 		float		GetComplexityByLevel(int level);
 
@@ -36,7 +39,20 @@ namespace BSB
 		{
 			get { return _levels.Count; }
 		}
+		
+		public Sprite upgradeOperationSprite
+		{
+			get { return _upgradeOperationSprite; }
+		}
+		public Sprite buildOperationSprite
+		{
+			get { return _buildOperationSprite; }
+		}
 
+		[SerializeField]
+		protected Sprite _buildOperationSprite;
+		[SerializeField]
+		protected Sprite _upgradeOperationSprite = null;
 		[SerializeField]
 		protected List<LevelInfo> _levels = new List<LevelInfo>();
 
