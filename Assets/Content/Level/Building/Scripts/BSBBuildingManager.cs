@@ -66,6 +66,8 @@ namespace BSB
 		protected BSBBarracksBuildingManager _barracksManager;
 		[SerializeField]
 		protected BSBHouseBuildingManager _houseManager;
+		[SerializeField]
+		protected BSBShopBuildingManager _shopManager;
 
 		protected Dictionary<int, BSBBuilding>	_buildings = new Dictionary<int, BSBBuilding>();
 
@@ -84,6 +86,8 @@ namespace BSB
 		{
 			_barracksManager.Initialize();
 			_houseManager.Initialize();
+			_shopManager.Initialize();
+			
 		}
 
 		//
@@ -261,6 +265,9 @@ namespace BSB
 				case EBSBBuildingType.HOUSE:
 					_houseManager.AddHouse((BSBHouseBuilding)building);
 					break;
+				case EBSBBuildingType.SHOP:
+					_shopManager.AddShop((BSBShopBuilding)building);
+					break;
 			}
 		}
 
@@ -273,6 +280,9 @@ namespace BSB
 					break;
 				case EBSBBuildingType.HOUSE:
 					_houseManager.RemoveHouse((BSBHouseBuilding)building);
+					break;
+				case EBSBBuildingType.SHOP:
+					_shopManager.RemoveShop((BSBShopBuilding)building);
 					break;
 			}
 		}
@@ -328,7 +338,7 @@ namespace BSB
 			switch (building.type)
 			{
 				case EBSBBuildingType.BARRACKS:
-					_barracksManager.OnBuildingBuilt((BSBBarracksBuilding)building);
+					_barracksManager.OnBarracksBuilt((BSBBarracksBuilding)building);
 					break;
 			}
 
@@ -345,7 +355,7 @@ namespace BSB
 			switch (building.type)
 			{
 				case EBSBBuildingType.BARRACKS:
-					_barracksManager.OnBuildingUpgraded((BSBBarracksBuilding)building);
+					_barracksManager.OnBarracksUpgraded((BSBBarracksBuilding)building);
 					break;
 			}
 

@@ -12,7 +12,9 @@ namespace BSB
 
 	public interface IBSBHouseBuilding : IBSBBuilding
 	{
-
+		bool isSoldOut { get; }
+		int maxHealth { get; }
+		int health { get; }
 	}
 
 	public class BSBHouseBuilding : BSBBuilding,
@@ -39,9 +41,11 @@ namespace BSB
 			set { _health = value; }
 		}
 
+		[SerializeField]
 		protected bool _isSoldOut = false;
+		[SerializeField]
 		protected int _maxHealth;
-		// health - month
+		[SerializeField]
 		protected int _health;
 
 		public BSBHouseBuilding() : base()

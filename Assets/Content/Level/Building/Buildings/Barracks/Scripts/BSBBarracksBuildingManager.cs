@@ -16,10 +16,10 @@ namespace BSB
 
 	public interface IBSBBarracksBuildingManagerEvents
 	{
-		event Events.OnBarracksBuildingAction onBuildingBuild;
-		event Events.OnBarracksBuildingAction onBuildingBuilt;
-		event Events.OnBarracksBuildingAction onBuildingUpgrade;
-		event Events.OnBarracksBuildingAction onBuildingUpgraded;
+		event Events.OnBarracksBuildingAction onBarracksBuild;
+		event Events.OnBarracksBuildingAction onBarracksBuilt;
+		event Events.OnBarracksBuildingAction onBarracksUpgrade;
+		event Events.OnBarracksBuildingAction onBarracksUpgraded;
 	}
 
 	public class BSBBarracksBuildingManager : MonoBehaviour,
@@ -95,35 +95,35 @@ namespace BSB
 		// < Events >
 		//
 
-		public event Events.OnBarracksBuildingAction onBuildingBuild = delegate { };
-		public event Events.OnBarracksBuildingAction onBuildingBuilt = delegate { };
-		public event Events.OnBarracksBuildingAction onBuildingUpgrade = delegate { };
-		public event Events.OnBarracksBuildingAction onBuildingUpgraded = delegate { };
+		public event Events.OnBarracksBuildingAction onBarracksBuild = delegate { };
+		public event Events.OnBarracksBuildingAction onBarracksBuilt = delegate { };
+		public event Events.OnBarracksBuildingAction onBarracksUpgrade = delegate { };
+		public event Events.OnBarracksBuildingAction onBarracksUpgraded = delegate { };
 
-		public void OnBuildingBuild(BSBBarracksBuilding barracks)
+		public void OnBarracksBuild(BSBBarracksBuilding barracks)
 		{
-			onBuildingBuild(barracks);
+			onBarracksBuild(barracks);
 		}
 
-		public void OnBuildingBuilt(BSBBarracksBuilding barracks)
+		public void OnBarracksBuilt(BSBBarracksBuilding barracks)
 		{
 			barracks.capacity = barracks.upgradedCapacity = GetBarracksCapacity(barracks);
 
-			onBuildingBuilt(barracks);
+			onBarracksBuilt(barracks);
 		}
 
-		public void OnBuildingUpgrade(BSBBarracksBuilding barracks)
+		public void OnBarracksUpgrade(BSBBarracksBuilding barracks)
 		{
-			onBuildingUpgrade(barracks);
+			onBarracksUpgrade(barracks);
 		}
 
-		public void OnBuildingUpgraded(BSBBarracksBuilding barracks)
+		public void OnBarracksUpgraded(BSBBarracksBuilding barracks)
 		{
 			var capacity = GetBarracksCapacity(barracks);
 			barracks.upgradedCapacity = capacity - barracks.capacity;
 			barracks.capacity = capacity;
 
-			onBuildingUpgraded(barracks);
+			onBarracksUpgraded(barracks);
 		}
 
 		//

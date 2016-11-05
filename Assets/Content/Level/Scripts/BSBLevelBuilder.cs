@@ -26,6 +26,8 @@ namespace BSB
 		protected BSBWorkerManager _workerManager;
 		[SerializeField]
 		protected BSBPrice _startReserves;
+		[SerializeField]
+		protected BSBPrice _startIncome;
 
 		protected BSBLevel _level;	
 

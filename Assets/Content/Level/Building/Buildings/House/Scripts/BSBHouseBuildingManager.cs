@@ -12,6 +12,10 @@ namespace BSB
 		BSBPrice			GetHouseSellPrice(IBSBHouseBuilding house);
 		void				SellHouse(IBSBHouseBuilding house);
 		IBSBHouseBuilding	GetHouseById(int id);
+
+		BSBPrice	RepairPrice(IBSBHouseBuilding house);
+		void		RepairHouse(IBSBHouseBuilding ihouse);
+		bool		TryRepairHouse(IBSBHouseBuilding house);
 	}
 
 
@@ -65,6 +69,41 @@ namespace BSB
 		{
 			return _GetHouseById(id);
 		}
+
+
+
+		public BSBPrice RepairPrice(IBSBHouseBuilding house)
+		{
+			var price = priceManager.GetRepairPrice(
+				_info.GetRepairPriceByLevel(house.level));
+
+			int dheath = (house.maxHealth - house.health) / 2;
+			price.funds *= dheath;
+			price.materials *= dheath;
+
+			return price;
+		}
+
+		public void RepairHouse(IBSBHouseBuilding ihouse)
+		{
+			if (!TryRepairHouse(ihouse))
+				return;
+
+			var house = _GetHouseById(ihouse.id);
+			house.Repair();
+
+			var price = RepairPrice(house);
+			playerResources.Use(price);
+			playerResources.Restore(price);
+		}
+
+		public bool TryRepairHouse(IBSBHouseBuilding house)
+		{
+			return playerResources.Contains(
+				RepairPrice(house));
+		}
+
+
 
 
 		public void AddHouse(BSBHouseBuilding house)

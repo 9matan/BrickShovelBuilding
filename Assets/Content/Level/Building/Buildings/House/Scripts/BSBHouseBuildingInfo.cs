@@ -8,7 +8,8 @@ namespace BSB
 
 	public interface IBSBHouseBuildingInfo : IBSBBuildingInfo
 	{
-		BSBPrice GetSellPriceByLevel(int level);
+		BSBPrice	GetSellPriceByLevel(int level);
+		int			GetHealthByLevel(int level);
 	}
 
 	[CreateAssetMenu(menuName = "BSB/Building/House info")]
@@ -20,6 +21,8 @@ namespace BSB
 		public struct HouseLevelInfo
 		{
 			public BSBPrice sellPrice;
+			public int		health;
+			public BSBPrice repairPrice;
 		}
 
 		[Header("House")]
@@ -29,6 +32,16 @@ namespace BSB
 		public BSBPrice GetSellPriceByLevel(int level)
 		{
 			return _houseLevels[level - 1].sellPrice;
+		}
+
+		public int GetHealthByLevel(int level)
+		{
+			return _houseLevels[level - 1].health;
+		}
+
+		public BSBPrice GetRepairPriceByLevel(int level)
+		{
+			return _houseLevels[level - 1].repairPrice;
 		}
 
 	}

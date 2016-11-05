@@ -11,6 +11,9 @@ namespace BSB
 		BSBPrice GetMaterialPrice(BSBPrice price);
 		BSBPrice GetWorkerPrice(BSBPrice price);
 		BSBPrice GetHouseSellPrice(BSBPrice price);
+		BSBPrice GetRepairPrice(BSBPrice price);
+
+		BSBPrice Inflation(BSBPrice price);
 	}
 
 	public class BSBPriceManager : MonoBehaviour,
@@ -38,6 +41,18 @@ namespace BSB
 		{
 			return GetBuildingPrice(price);
 		}
+
+		public BSBPrice GetRepairPrice(BSBPrice price)
+		{
+			return _Inflation(price);
+		}
+
+		public BSBPrice Inflation(BSBPrice price)
+		{
+			return _Inflation(price);
+		}
+
+
 
 		protected BSBPrice _Inflation(BSBPrice price)
 		{
@@ -88,6 +103,15 @@ namespace BSB
 		public int funds;
 		public int workers;
 		public int materials;
+
+		public static BSBPrice operator +(BSBPrice p1, BSBPrice p2)
+		{
+			p1.funds += p2.funds;
+			p1.materials += p2.materials;
+			p1.workers += p2.workers;
+
+			return p1;
+		}
 	}
 
 }

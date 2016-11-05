@@ -35,9 +35,17 @@ namespace BSB
 		IVOSInitializable
 	{
 
-		public IBSBBarracksBuildingManager barracksManager
+		public IBSBBarracksBuildingManager	barracksManager
 		{
 			get { return BSBDirector.barracksManager; }
+		}
+		public IBSBPriceManager				priceManager
+		{
+			get { return BSBDirector.priceManager; }
+		}
+		public IBSBTimeManager				timeManager
+		{
+			get { return BSBDirector.timeManager; }
 		}
 
 		public IBSBReserveStorage fundsStorage
@@ -89,6 +97,18 @@ namespace BSB
 			get { return workersStorage.freeCapacity; }
 		}
 
+		public BSBPrice income
+		{
+			get
+			{
+				return priceManager.Inflation(_income);
+			}
+			set { _income = value; }
+		}
+
+		[SerializeField]
+		protected BSBPrice _income;
+
 		protected BSBReservesStorage _reserves = new BSBReservesStorage();
 
 
@@ -101,6 +121,7 @@ namespace BSB
 			_InitializeReserves();
 
 			_ListenBarracksManager(barracksManager);
+			_ListenTimeManager(timeManager);
 
 			isInit = true;
 		}
@@ -111,8 +132,13 @@ namespace BSB
 
 		protected void _ListenBarracksManager(IBSBBarracksBuildingManagerEvents events)
 		{
-			events.onBuildingBuilt += _OnBarracksBuilt;
-			events.onBuildingUpgraded += _OnBarracksUpgraded;
+			events.onBarracksBuilt += _OnBarracksBuilt;
+			events.onBarracksUpgraded += _OnBarracksUpgraded;
+		}
+
+		protected void _ListenTimeManager(IBSBTimeManagerEvents events)
+		{
+			events.onMonthEnded += _UpdateIncome;
 		}
 
 		//
@@ -176,6 +202,11 @@ namespace BSB
 		//
 		// </ Building events >
 		//
+
+		protected void _UpdateIncome()
+		{
+			Add(income);
+		}
 
 		protected void _UpdateWorkersCapacity(int delta)
 		{

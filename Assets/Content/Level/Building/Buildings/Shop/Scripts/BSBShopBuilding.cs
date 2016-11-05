@@ -5,7 +5,18 @@ using BSB;
 namespace BSB
 {
 
-	public class BSBShopBuilding : BSBBuilding
+	namespace Events
+	{
+		public delegate void OnShopBuildingAction(IBSBShopBuilding shop);
+	}
+
+	public interface IBSBShopBuilding : IBSBBuilding
+	{
+
+	}
+
+	public class BSBShopBuilding : BSBBuilding,
+		IBSBShopBuilding
 	{
 
 		public BSBShopBuilding() : base()
