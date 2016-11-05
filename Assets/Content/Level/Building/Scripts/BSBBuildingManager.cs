@@ -34,6 +34,7 @@ namespace BSB
 		float		UpgradeTime(IBSBBuilding building);
 		BSBPrice	BuildPrice(EBSBBuildingType type);
 		float		BuildTime(EBSBBuildingType type);
+		void		RemoveBuilding(IBSBBuilding building);
 	}
 
 	public class BSBBuildingManager : MonoBehaviour,
@@ -63,6 +64,8 @@ namespace BSB
 		[Header("Managers")]
 		[SerializeField]
 		protected BSBBarracksBuildingManager _barracksManager;
+		[SerializeField]
+		protected BSBHouseBuildingManager _houseManager;
 
 		protected Dictionary<int, BSBBuilding>	_buildings = new Dictionary<int, BSBBuilding>();
 
@@ -80,6 +83,7 @@ namespace BSB
 		protected void _InitializeManagers()
 		{
 			_barracksManager.Initialize();
+			_houseManager.Initialize();
 		}
 
 		//
@@ -90,6 +94,8 @@ namespace BSB
 		{
 			return _infoContainer[building.type].levelCount;
 		}
+
+	//	public void 
 
 		//
 		// < Upgrade >
@@ -217,19 +223,6 @@ namespace BSB
 
 
 
-		protected void _AddBuilding(BSBBuilding building)
-		{
-			_ListenBuilding(building);
-			_buildings.Add(building.id, building);
-
-			switch(building.type)
-			{
-				case EBSBBuildingType.BARRACKS:
-					_barracksManager.AddBarracks((BSBBarracksBuilding)building);
-					break;
-			}
-		}
-
 		protected BSBBuilding _GetBuildingById(int id)
 		{
 			if (!_buildings.ContainsKey(id))
@@ -255,6 +248,49 @@ namespace BSB
 		// </ Build >
 		//
 
+		protected void _AddBuilding(BSBBuilding building)
+		{
+			_ListenBuilding(building);
+			_buildings.Add(building.id, building);
+
+			switch (building.type)
+			{
+				case EBSBBuildingType.BARRACKS:
+					_barracksManager.AddBarracks((BSBBarracksBuilding)building);
+					break;
+				case EBSBBuildingType.HOUSE:
+					_houseManager.AddHouse((BSBHouseBuilding)building);
+					break;
+			}
+		}
+
+		protected void _RemoveBuilding(BSBBuilding building)
+		{
+			switch (building.type)
+			{
+				case EBSBBuildingType.BARRACKS:
+					_barracksManager.RemoveBarracks((BSBBarracksBuilding)building);
+					break;
+				case EBSBBuildingType.HOUSE:
+					_houseManager.RemoveHouse((BSBHouseBuilding)building);
+					break;
+			}
+		}
+
+		public void RemoveBuilding(IBSBBuilding ibuilding)
+		{
+			var building = _GetBuildingById(ibuilding.id);
+
+			_RemoveBuilding(building);
+
+			building.Clear();
+			_factories.Free(building.type, building);
+
+			_OnBuildingRemoved(building);
+		}
+
+
+
 		protected void _RestoreReserves(IBuildingActionListener<BSBPrice> listener)
 		{
 			playerResources.Restore(listener.data);
@@ -268,6 +304,7 @@ namespace BSB
 		public event Events.OnBuildingAction onBuildingBuilt = delegate { };
 		public event Events.OnBuildingAction onBuildingUpgrade = delegate { };
 		public event Events.OnBuildingAction onBuildingUpgraded = delegate { };
+		public event Events.OnBuildingAction onBuildingRemoved = delegate { };
 
 		protected void _OnIBuildingBuilt(IBSBBuilding building)
 		{
@@ -313,6 +350,11 @@ namespace BSB
 			}
 
 			onBuildingUpgraded(building);
+		}
+
+		protected void _OnBuildingRemoved(BSBBuilding building)
+		{
+			onBuildingRemoved(building);
 		}
 
 		//

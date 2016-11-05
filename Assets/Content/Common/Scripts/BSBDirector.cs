@@ -124,6 +124,20 @@ namespace BSB
 
 		private static BSBCameraController _cameraController;
 
+
+
+		public static IBSBTimeManager timeManager
+		{
+			get
+			{
+				if (_timeManager == null || _map.Equals(null))
+					_timeManager = GameObject.FindObjectOfType<BSBTimeManager>();
+				return _timeManager;
+			}
+		}
+
+		private static BSBTimeManager _timeManager;
+
 	}
 
 }

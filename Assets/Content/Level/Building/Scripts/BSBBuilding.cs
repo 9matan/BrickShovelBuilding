@@ -29,6 +29,7 @@ namespace BSB
 	{
 		event OnBuildingAction onBuildingBuilt;
 		event OnBuildingAction onBuildingUpgraded;
+		event OnBuildingAction onBuildingDestruction;
 	}
 
 	public enum EBSBBuildingType
@@ -93,7 +94,7 @@ namespace BSB
 		// < Initialize >
 		//
 
-		public void Initialize(IBSBBuildingInfo __info)
+		public virtual void Initialize(IBSBBuildingInfo __info)
 		{
 			_info = __info;
 			_id = ++_ID;
@@ -156,12 +157,24 @@ namespace BSB
 
 		}
 
+
+		protected virtual void Update()
+		{
+
+		}
+
+		public virtual void DestroyBuilding()
+		{
+			_OnDestruction();
+		}
+
 		//
 		// < Events >
 		//
 
 		public event OnBuildingAction onBuildingBuilt = delegate { };
 		public event OnBuildingAction onBuildingUpgraded = delegate { };
+		public event OnBuildingAction onBuildingDestruction = delegate { };
 
 		protected void _OnBuilt()
 		{
@@ -175,6 +188,11 @@ namespace BSB
 			++_level;
 			_state = EBSBBuildingState.IDLE;
 			onBuildingUpgraded(this);
+		}
+
+		protected void _OnDestruction()
+		{
+			onBuildingDestruction(this);
 		}
 
 		//
@@ -191,7 +209,7 @@ namespace BSB
 			onBuildingUpgraded = delegate { };
 		}
 
-		public void Clear()
+		public virtual void Clear()
 		{
 			_face.Clear();
 			_ClearEvents();

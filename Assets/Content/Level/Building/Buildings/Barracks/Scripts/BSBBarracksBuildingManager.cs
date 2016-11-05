@@ -86,6 +86,11 @@ namespace BSB
 			_barracksContainer.Add(barracks.id, barracks);
 		}
 
+		public void RemoveBarracks(BSBBarracksBuilding barracks)
+		{
+			_barracksContainer.Remove(barracks.id);
+		}
+
 		//
 		// < Events >
 		//
