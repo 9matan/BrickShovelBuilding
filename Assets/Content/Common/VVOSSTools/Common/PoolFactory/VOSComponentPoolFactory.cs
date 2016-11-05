@@ -40,9 +40,10 @@ public class VOSComponentPoolFactory<C> : VOSPoolFactory<C>,
 	protected override void _FreeItem(C item)
 	{
 		item.transform.parent = transform;
+		item.transform.localPosition = Vector3.zero;
 
 		if (hideOnFree)
-			item.transform.gameObject.Hide();
+			item.gameObject.Hide();
 
 		base._FreeItem(item);
 	}

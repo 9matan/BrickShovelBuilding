@@ -15,7 +15,8 @@ namespace BSB
 
 	public interface IBSBBuilding :
 		IBSBActionTimeable,
-		IBSBBuildingEvents
+		IBSBBuildingEvents,
+		IBSBMapItem
 	{
 		int					id { get; }
 		EBSBBuildingType	type { get; }
@@ -52,6 +53,10 @@ namespace BSB
 
 		protected static int _ID = 0;
 
+		public EBSBMapItemType		mapItemType
+		{
+			get { return EBSBMapItemType.BUILDING; }
+		}
 		public int					id
 		{
 			get { return _id; }

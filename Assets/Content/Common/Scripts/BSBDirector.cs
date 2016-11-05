@@ -85,6 +85,45 @@ namespace BSB
 		}
 
 		private static BSBPriceManager _priceManager;
+
+
+
+		public static IBSBMap map
+		{
+			get
+			{
+				if (_map == null || _map.Equals(null))
+					_map = GameObject.FindObjectOfType<BSBMap>();
+				return _map;
+			}
+		}
+
+		private static BSBMap _map;
+
+
+
+		public static IBSBCameraController cameraController
+		{
+			get
+			{
+				if (_cameraController == null || _map.Equals(null))
+					_cameraController = GameObject.FindObjectOfType<BSBCameraController>();
+				return _cameraController;
+			}
+		}
+
+		public static Camera camera
+		{
+			get
+			{
+				if (cameraController != null)
+					return cameraController.camera;
+				return null;
+			}
+		}
+
+		private static BSBCameraController _cameraController;
+
 	}
 
 }

@@ -11,9 +11,13 @@ namespace BSB
 		public const int INFINITY_CAPACITY = 10000000;
 
 
-		public IBSBPlayerResources playerResources
+		public IBSBPlayerResources	playerResources
 		{
 			get { return BSBDirector.playerResources; }
+		}
+		public IBSBMap				map
+		{
+			get { return BSBDirector.map; }
 		}
 
 		[SerializeField]
@@ -50,13 +54,14 @@ namespace BSB
 
 		protected void _BuildBuildings()
 		{
-			_buildingManager.BuildBuildingImmediatelyFree(EBSBBuildingType.BARRACKS);			
+			var barrack = _buildingManager.BuildBuildingImmediatelyFree(EBSBBuildingType.BARRACKS);
+			map.SetMapItemToRandomEmptyPlacement(barrack);
 		}
 	
 	
 		protected void _Test()
 		{
-			_buildingManager.BuildBuilding(EBSBBuildingType.HOUSE);
+	//		_buildingManager.BuildBuilding(EBSBBuildingType.HOUSE);
 		}
 
 		//
