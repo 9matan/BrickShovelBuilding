@@ -5,31 +5,18 @@ using BSB;
 namespace BSB
 {
 
-	public class BSBHouseBuildingInfo : MonoBehaviour 
+	public interface IBSBHouseBuildingInfo : IBSBBuildingInfo
+	{
+
+	}
+
+	[CreateAssetMenu(menuName = "BSB/Building/House info")]
+	public class BSBHouseBuildingInfo : BSBBuildingInfo,
+		IBSBHouseBuildingInfo
 	{
 
 		
-	
-	
-	
-	
-	
-		//
-		// < Log >
-		//
-		
-		public bool debug = false;
-				
-		public void Log(object msg)
-		{
-			if(debug)
-				Debug.Log(msg);
-		}		
 
-		//
-		// </ Log >
-		//
-		
 	}
 
 }

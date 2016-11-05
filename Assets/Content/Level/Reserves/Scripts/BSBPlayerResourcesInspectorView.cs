@@ -34,6 +34,8 @@ namespace BSB
 
 		protected void Update()
 		{
+			if (!_resources.isInit) return;
+
 			_UpdateReservesView();
 		}
 

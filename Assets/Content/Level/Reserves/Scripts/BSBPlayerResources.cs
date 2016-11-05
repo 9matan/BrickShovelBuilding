@@ -35,6 +35,11 @@ namespace BSB
 		IVOSInitializable
 	{
 
+		public IBSBBarracksBuildingManager barracksManager
+		{
+			get { return BSBDirector.barracksManager; }
+		}
+
 		public IBSBReserveStorage fundsStorage
 		{
 			get
@@ -55,6 +60,11 @@ namespace BSB
 			{
 				return _reserves.materials;
 			}
+		}
+
+		public bool isInit
+		{
+			get; protected set;
 		}
 
 		public int funds
@@ -79,7 +89,8 @@ namespace BSB
 			get { return workersStorage.freeCapacity; }
 		}
 
-		protected BSBReservesStorage _reserves;
+		protected BSBReservesStorage _reserves = new BSBReservesStorage();
+
 
 		//
 		// < Initialize >
@@ -88,11 +99,20 @@ namespace BSB
 		public void Initialize()
 		{
 			_InitializeReserves();
+
+			_ListenBarracksManager(barracksManager);
+
+			isInit = true;
 		}
 
 		protected void _InitializeReserves()
 		{
-			_reserves = new BSBReservesStorage();
+		}
+
+		protected void _ListenBarracksManager(IBSBBarracksBuildingManagerEvents events)
+		{
+			events.onBuildingBuilt += _OnBarracksBuilt;
+			events.onBuildingUpgraded += _OnBarracksUpgraded;
 		}
 
 		//
@@ -138,7 +158,30 @@ namespace BSB
 		{
 			Restore(new BSBReserves(__reserves));
 		}
-		
+
+		//
+		// < Building events >
+		//
+
+		protected void _OnBarracksBuilt(IBSBBarracksBuilding barracks)
+		{
+			_UpdateWorkersCapacity(barracks.upgradedCapacity);
+		}
+
+		protected void _OnBarracksUpgraded(IBSBBarracksBuilding barracks)
+		{
+			_UpdateWorkersCapacity(barracks.upgradedCapacity);
+		}
+
+		//
+		// </ Building events >
+		//
+
+		protected void _UpdateWorkersCapacity(int delta)
+		{
+			workersStorage.Extend(delta);
+		}
+
 		//
 		// < Log >
 		//

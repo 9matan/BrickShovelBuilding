@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using BSB;
 
 namespace BSB
@@ -15,13 +16,17 @@ namespace BSB
 		IVOSInitializable
 	{
 
-		public IBSBPlayerResources	playerResources
+		public IBSBPlayerResources			playerResources
 		{
 			get { return BSBDirector.playerResources; }
 		}
-		public IBSBPriceManager		priceManager
+		public IBSBPriceManager				priceManager
 		{
 			get { return BSBDirector.priceManager; }
+		}
+		public IBSBBarracksBuildingManager	barracksManager
+		{
+			get { return BSBDirector.barracksManager; }
 		}
 
 		public BSBPrice workerPrice
@@ -37,6 +42,9 @@ namespace BSB
 		protected BSBPrice	_workerPrice;
 		[SerializeField]
 		protected int		_purchasingQuantity = 1;
+
+
+		protected Dictionary<int, BSBWorker> _workers = new Dictionary<int, BSBWorker>();
 
 		//
 		// < Initialize >
@@ -57,8 +65,18 @@ namespace BSB
 				return;
 
 			var worker = _CreateWorker();
+			worker.Initialize();
+			_AddWorker(worker);
 			_HireWorker(worker);
 		}		
+
+		public void HireOneWorkerFree()
+		{
+			var worker = _CreateWorker();
+			worker.Initialize();
+			_AddWorker(worker);
+			_HireOneWorkerFree(worker);
+		}
 
 		public bool TryHireWorker()
 		{
@@ -68,9 +86,19 @@ namespace BSB
 			return playerResources.Contains(workerPrice);
 		}
 
+
+
+
 		protected BSBWorker _CreateWorker()
 		{
 			return _factory.Allocate();
+		}
+
+		protected void _AddWorker(BSBWorker worker)
+		{
+			if (!barracksManager.AddWorker(worker))
+				Debug.LogError("Not enough space for worker!");
+			_workers.Add(worker.id, worker);
 		}
 
 		protected void _HireWorker(IBSBWorker worker)
@@ -78,6 +106,13 @@ namespace BSB
 			playerResources.Use(workerPrice);
 			var reserves = new BSBPrice();
 			reserves.workers = _purchasingQuantity;
+			playerResources.Add(reserves);
+		}
+
+		protected void _HireOneWorkerFree(IBSBWorker worker)
+		{
+			var reserves = new BSBPrice();
+			reserves.workers = 1;
 			playerResources.Add(reserves);
 		}
 

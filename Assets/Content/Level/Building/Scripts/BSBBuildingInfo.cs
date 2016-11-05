@@ -36,12 +36,12 @@ namespace BSB
 
 		public BSBPrice GetPriceByLevel(int level)
 		{
-			return _levels[level].price;
+			return _levels[level - 1].price;
 		}
 
 		public float GetComplexityByLevel(int level)
 		{
-			return _levels[level].complexity;
+			return _levels[level - 1].complexity;
 		}
 		
 	}

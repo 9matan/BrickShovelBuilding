@@ -115,6 +115,11 @@ namespace BSB
 				this, _UpdateConstruction, _OnBuilt, time);
 		}
 
+		public void BuildImmediately()
+		{
+			_OnBuilt();
+		}
+
 		public void Upgrade(float time)
 		{
 			_state = EBSBBuildingState.UPGRADE;

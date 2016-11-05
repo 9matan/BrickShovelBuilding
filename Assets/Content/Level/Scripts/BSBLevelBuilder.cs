@@ -8,42 +8,55 @@ namespace BSB
 	public class BSBLevelBuilder : MonoBehaviour 
 	{
 
+		public const int INFINITY_CAPACITY = 10000000;
+
+
 		public IBSBPlayerResources playerResources
 		{
 			get { return BSBDirector.playerResources; }
 		}
-		public IBSBBuildingManager buildingManager
-		{
-			get { return BSBDirector.buildingManager; }
-		}
-
-		protected BSBLevel _level;
 
 		[SerializeField]
+		protected BSBBuildingManager _buildingManager;
+		[SerializeField]
+		protected BSBWorkerManager _workerManager;
+		[SerializeField]
 		protected BSBPrice _startReserves;
+
+		protected BSBLevel _level;	
 
 		public void Build(BSBLevel __level)
 		{
 			_level = __level;
 
-			_BuildReserves();
+			_BuildBuildings();
+			_BuildReserves();			
 
 			_Test();
 		}
 	
 		protected void _BuildReserves()
 		{
-			playerResources.fundsStorage.Extend(100000000);
-			playerResources.materialsStorage.Extend(100000000);
-			playerResources.workersStorage.Extend(_startReserves.workers);
+			playerResources.fundsStorage.Extend(INFINITY_CAPACITY);
+			playerResources.materialsStorage.Extend(INFINITY_CAPACITY);
+
+			for (int i = 0; i < _startReserves.workers; ++i)
+				_workerManager.HireOneWorkerFree();
+
+			_startReserves.workers = 0;
 
 			playerResources.Add(_startReserves);
+		}
+
+		protected void _BuildBuildings()
+		{
+			_buildingManager.BuildBuildingImmediatelyFree(EBSBBuildingType.BARRACKS);
 		}
 	
 	
 		protected void _Test()
 		{
-			buildingManager.BuildBuilding(EBSBBuildingType.HOUSE);
+		//	buildingManager.BuildBuilding(EBSBBuildingType.BARRACKS);
 		}
 
 		//

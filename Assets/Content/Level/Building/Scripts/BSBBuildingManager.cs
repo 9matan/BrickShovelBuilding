@@ -52,7 +52,7 @@ namespace BSB
 
 		public IBSBBarracksBuildingManager barracksManager
 		{
-			get { return _barracksManagerImp; }
+			get { return _barracksManager; }
 		}
 
 		[SerializeField]
@@ -62,15 +62,29 @@ namespace BSB
 
 		[Header("Managers")]
 		[SerializeField]
-		protected BSBBarracksBuildingManager _barracksManagerImp;
+		protected BSBBarracksBuildingManager _barracksManager;
 
 		protected Dictionary<int, BSBBuilding>	_buildings = new Dictionary<int, BSBBuilding>();
 
+		//
+		// < Initialize >
+		//
 
 		public void Initialize()
 		{
 			_factories.Initialize();
+
+			_InitializeManagers();
 		}
+
+		protected void _InitializeManagers()
+		{
+			_barracksManager.Initialize();
+		}
+
+		//
+		// </ Initialize >
+		//
 
 		public int MaxBuildingLevel(IBSBBuilding building)
 		{
@@ -85,13 +99,13 @@ namespace BSB
 		{
 			return priceManager.GetBuildingPrice(
 				_infoContainer[building.type].
-				GetPriceByLevel(building.level));
+				GetPriceByLevel(building.level + 1));
 		}
 
 		public float UpgradeTime(IBSBBuilding building)
 		{
 			return _infoContainer[building.type].
-				GetComplexityByLevel(building.level);
+				GetComplexityByLevel(building.level + 1);
 		}
 
 		public void UpgradeBuilding(IBSBBuilding building)
@@ -101,7 +115,8 @@ namespace BSB
 
 			_UpgradeByilding(
 				_GetBuildingById(building.id));
-			_OnBuildingUpgrade(building);
+			_OnBuildingUpgrade(
+				_GetBuildingById(building.id));
 		}
 
 		public bool TryUpgrade(IBSBBuilding building)
@@ -136,12 +151,12 @@ namespace BSB
 		public BSBPrice BuildPrice(EBSBBuildingType type)
 		{
 			return priceManager.GetBuildingPrice(
-				_infoContainer[type].GetPriceByLevel(0));
+				_infoContainer[type].GetPriceByLevel(1));
 		}
 
 		public float BuildTime(EBSBBuildingType type)
 		{
-			return _infoContainer[type].GetComplexityByLevel(0);
+			return _infoContainer[type].GetComplexityByLevel(1);
 		}
 
 		public IBSBBuilding BuildBuilding(EBSBBuildingType type)
@@ -150,9 +165,10 @@ namespace BSB
 				return null;
 
 			var building = _CreateBuilding(type);
-			_BuildBuilding(building);
+			building.Initialize();
 			_AddBuilding(building);
 			_OnBuildingBuild(building);
+			_BuildBuilding(building);			
 			
 			return building;
 		}
@@ -165,10 +181,21 @@ namespace BSB
 		
 
 
+		public IBSBBuilding BuildBuildingImmediatelyFree(EBSBBuildingType type)
+		{
+			var building = _CreateBuilding(type);
+			building.Initialize();
+			_AddBuilding(building);
+			_OnBuildingBuild(building);
+			_BuildBuildingImmediatelyFree(building);
+
+			return building;
+		}
+
+
+
 		protected void _BuildBuilding(BSBBuilding building)
 		{
-			building.Initialize();
-
 			var price = BuildPrice(building.type);
 			playerResources.Use(price);
 			BuildingActionListener<BSBPrice>.StartTrigger(
@@ -178,6 +205,10 @@ namespace BSB
 				BuildTime(building.type));
 		}
 
+		protected void _BuildBuildingImmediatelyFree(BSBBuilding building)
+		{			
+			building.BuildImmediately();
+		}
 
 
 
@@ -189,7 +220,7 @@ namespace BSB
 			switch(building.type)
 			{
 				case EBSBBuildingType.BARRACKS:
-
+					_barracksManager.AddBarracks((BSBBarracksBuilding)building);
 					break;
 			}
 		}
@@ -211,8 +242,8 @@ namespace BSB
 
 		protected void _ListenBuilding(IBSBBuilding building)
 		{
-			building.onBuildingBuilt += _OnBuildingBuilt;
-			building.onBuildingUpgraded += _OnBuildingUpgraded;
+			building.onBuildingBuilt += _OnIBuildingBuilt;
+			building.onBuildingUpgraded += _OnIBuildingUpgraded;
 		}
 
 		//
@@ -233,23 +264,49 @@ namespace BSB
 		public event Events.OnBuildingAction onBuildingUpgrade = delegate { };
 		public event Events.OnBuildingAction onBuildingUpgraded = delegate { };
 
-		protected void _OnBuildingBuild(IBSBBuilding building)
+		protected void _OnIBuildingBuilt(IBSBBuilding building)
+		{
+			_OnBuildingBuilt(_GetBuildingById(building.id));
+		}
+
+		protected void _OnIBuildingUpgraded(IBSBBuilding building)
+		{
+			_OnBuildingUpgraded(_GetBuildingById(building.id));
+		}
+
+
+
+		protected void _OnBuildingBuild(BSBBuilding building)
 		{
 			onBuildingBuild(building);
 		}
 
-		protected void _OnBuildingBuilt(IBSBBuilding building)
+		protected void _OnBuildingBuilt(BSBBuilding building)
 		{
+			switch (building.type)
+			{
+				case EBSBBuildingType.BARRACKS:
+					_barracksManager.OnBuildingBuilt((BSBBarracksBuilding)building);
+					break;
+			}
+
 			onBuildingBuilt(building);
 		}
 
-		protected void _OnBuildingUpgrade(IBSBBuilding building)
+		protected void _OnBuildingUpgrade(BSBBuilding building)
 		{
 			onBuildingUpgrade(building);
 		}
 
-		protected void _OnBuildingUpgraded(IBSBBuilding building)
+		protected void _OnBuildingUpgraded(BSBBuilding building)
 		{
+			switch (building.type)
+			{
+				case EBSBBuildingType.BARRACKS:
+					_barracksManager.OnBuildingUpgraded((BSBBarracksBuilding)building);
+					break;
+			}
+
 			onBuildingUpgraded(building);
 		}
 

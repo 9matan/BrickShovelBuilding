@@ -364,6 +364,7 @@ namespace BSB
 			int freeCapacity { get; }
 
 			void Extend(int capacity);
+			void Resize(int __capacity);
 		}
 
 		[System.Serializable]
@@ -495,6 +496,12 @@ namespace BSB
 			public void Extend(int __capacity)
 			{
 				_capacity += __capacity;
+			}
+			public void Resize(int __capacity)
+			{
+				if (__capacity < _capacity)
+					Add(_capacity - __capacity);
+				_capacity = __capacity;
 			}
 		}
 
@@ -678,6 +685,7 @@ namespace BSB
 		public BSBReservesStorage() :
 			base(new BSBReservesInternalContainer())
 		{
+			_Set(0, 0, 0);
 		}
 
 		public BSBReservesStorage(int __funds, int __workers, int __materials) :
