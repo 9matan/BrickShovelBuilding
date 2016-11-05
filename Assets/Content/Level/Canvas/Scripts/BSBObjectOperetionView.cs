@@ -75,7 +75,7 @@ namespace BSB
 			if (oper.IsValid())
 				_operationImg.color = new Color(c.a, c.g, c.b, 1.0f);
 			else
-				_operationImg.color = new Color(c.a, c.g, c.b, 0.25f);
+				_operationImg.color = new Color(c.a, c.g, c.b, 0.5f);
 		}
 
 		protected void _UpdateData()

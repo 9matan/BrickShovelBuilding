@@ -49,6 +49,7 @@ namespace BSB
 		protected void _UpdateSprite()
 		{
 			if (building == null) return;
+			
 
 			if (building.state == EBSBBuildingState.IDLE)
 			{
@@ -59,14 +60,20 @@ namespace BSB
 			}
 			else
 			{
-				var index = _GetBuildingSpriteIndex();
+	
+				sprite = building.info.GetSpriteByLevel(building.level + 1);
+				_spriter.color = new Color(
+					_spriter.color.a, _spriter.color.g, _spriter.color.b, (building.currentActionTime / building.actionTime)
+					);
+
+	/*			var index = _GetBuildingSpriteIndex();
 
 				if (_lastBuildingState != building.state || _lastSprite != index)
 				{
 					sprite = building.info.GetUpgradingSpriteByLevel(building.level, index);					
 				}
 
-				_lastSprite = index;
+				_lastSprite = index;*/
 			}
 			
 			_lastBuildingState = building.state;
