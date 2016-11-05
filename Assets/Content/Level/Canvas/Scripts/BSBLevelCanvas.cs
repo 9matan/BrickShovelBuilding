@@ -49,11 +49,14 @@ namespace BSB
 		{
 			isOperationsActive = true;
 			_operations.gameObject.Show();
-			_operations.SetToItem(placement);
+			if (!_operations.SetToItem(placement))
+				DeactivateOperations();
 		}
 		
 		public void DeactivateOperations()
 		{
+			if (!isOperationsActive) return;
+
 			_operations.Reset();
 			_operations.gameObject.Hide();
 			isOperationsActive = false;

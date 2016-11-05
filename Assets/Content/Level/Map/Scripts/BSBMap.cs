@@ -210,6 +210,9 @@ namespace BSB
 
 		protected void _OnManipulatorReleased(IVOSManipulator control)
 		{
+			if (!selectionOn)
+				return;
+		
 			var position = control.ToWorldPosition(camera);
 			var placement = GetPlacementByWorldPosition(position);
 
@@ -219,11 +222,11 @@ namespace BSB
 					_OnPlacementDeselected();
 				_activePlacement = placement;
 			}
-			else if (selectionOn)
+			else
 			{
 				_activePlacement = placement;
 				_OnPlacementSelected();
-			}			
+			}
 		}
 
 		//

@@ -49,17 +49,10 @@ namespace BSB
 			get; protected set;
 		}
 
-		public void Awake()
-		{
-			_button.onClick.AddListener(_OnClick);
-		}
-
 		public void SetOperation(IBSBObjectOperation __oper)
 		{
 			oper = __oper;
-
-			price = __oper.info.operationPrice;
-			_operationImg.sprite = __oper.info.operationSprite;
+			_UpdateData();
 		}
 
 		public void Reset()
@@ -67,7 +60,7 @@ namespace BSB
 			oper = null;
 		}
 
-		protected void _OnClick()
+		public void OnClick()
 		{
 			if (oper.IsValid())
 				oper.Activate();
@@ -76,12 +69,19 @@ namespace BSB
 		protected void Update()
 		{
 			if (oper == null) return;
+			_UpdateData();
 			var c = _operationImg.color;
 
 			if (oper.IsValid())
 				_operationImg.color = new Color(c.a, c.g, c.b, 1.0f);
 			else
 				_operationImg.color = new Color(c.a, c.g, c.b, 0.25f);
+		}
+
+		protected void _UpdateData()
+		{
+			price = oper.info.operationPrice;
+			_operationImg.sprite = oper.info.operationSprite;
 		}
 
 	}

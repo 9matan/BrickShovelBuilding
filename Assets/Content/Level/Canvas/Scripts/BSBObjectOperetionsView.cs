@@ -13,19 +13,24 @@ namespace BSB
 		[SerializeField]
 		protected List<BSBObjectOperetionView> _viewsList = new List<BSBObjectOperetionView>();
 
-		public void SetToItem(IBSBMapPlacement placement)
+		public bool SetToItem(IBSBMapPlacement placement)
 		{
+			var operList = _GetOperations(placement.mapItem);
+			if (operList == null)
+				return false;
+
 			var pos = placement.transform.position;
 			pos.y += 1.0f;
 			transform.position = pos;
 
-			var operList = _GetOperations(placement.mapItem);
-
+			
 			for(int i = 0; i < operList.Count; ++i)
 			{
 				_viewsList[i].gameObject.Show();
 				_viewsList[i].SetOperation(operList[i]);
 			}
+
+			return true;
 		}
 
 		//
@@ -49,6 +54,8 @@ namespace BSB
 
 		protected List<IBSBObjectOperation> _GetBuildingOperations(IBSBBuilding building)
 		{
+			if (building.state != EBSBBuildingState.IDLE) return null;
+
 			return BSBDirector.buildingManager.GetOperations(building);
 		}
 

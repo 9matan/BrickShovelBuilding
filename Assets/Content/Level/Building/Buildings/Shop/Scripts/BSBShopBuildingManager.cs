@@ -67,7 +67,7 @@ namespace BSB
 			foreach (var kvp in _shopsContainer)
 			{
 				var income = _info.GetIncomeByLevel(kvp.Value.level);
-				totalIncome.funds += (income.funds * houseManager.houseCount);
+				totalIncome.funds += (income.funds * (houseManager.houseCount + 1));
 				totalIncome.materials += income.materials;
 			}
 

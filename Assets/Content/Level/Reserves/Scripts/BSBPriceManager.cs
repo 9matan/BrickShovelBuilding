@@ -23,8 +23,18 @@ namespace BSB
 	}
 
 	public class BSBPriceManager : MonoBehaviour,
-		IBSBPriceManager
+		IBSBPriceManager,
+		IVOSInitializable
 	{
+
+
+		public void Initialize()
+		{
+			BSBDirector.timeManager.onMonthEnded += _UpdateInflation;
+		}
+
+
+
 
 		public BSBPrice GetBuildingPrice(BSBPrice price)
 		{
@@ -103,6 +113,14 @@ namespace BSB
 		protected float _materialsInflation = 1.0f;
 		[SerializeField]
 		protected float _buildingsInflation = 1.0f;
+
+
+		protected void _UpdateInflation()
+		{
+			_inflation = Random.Range(0.7f, 1.5f);
+			_materialsInflation = Random.Range(0.8f, 1.65f);
+			_buildingsInflation = Random.Range(0.55f, 1.25f);
+		}
 
 		//
 		// < Log >

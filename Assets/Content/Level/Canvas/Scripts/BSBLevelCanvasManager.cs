@@ -34,7 +34,7 @@ namespace BSB
 		
 		protected void Update()
 		{
-			map.selectionOn = !_canvas.isOperationsActive;
+		//	map.selectionOn = !_canvas.isOperationsActive;
 		}
 
 		//

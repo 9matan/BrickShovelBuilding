@@ -72,6 +72,7 @@ namespace BSB
 			playerResources.Restore(price);
 
 			var trash = _GetTrashById(itrash.id);
+			BSBDirector.map.ClearPlacement(trash.mapPlacement);
 			_RemoveTrash(trash);
 			_FreeTrash(trash);
 		}

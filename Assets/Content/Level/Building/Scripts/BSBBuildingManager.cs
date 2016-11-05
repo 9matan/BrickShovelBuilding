@@ -145,6 +145,12 @@ namespace BSB
 
 		public bool TryUpgrade(IBSBBuilding building)
 		{
+			if(building.type == EBSBBuildingType.HOUSE)
+			{
+				if (houseManager.GetHouseById(building.id).isSoldOut)
+					return false;
+			}
+
 			if (MaxBuildingLevel(building) == building.level)
 				return false;
 
@@ -307,9 +313,11 @@ namespace BSB
 
 			_RemoveBuilding(building);
 
+			var trash = BSBDirector.trashManager.CreateTrash();
+			BSBDirector.map.SetMapItem(ibuilding.mapPlacement, trash);
+
 			building.Clear();
 			_factories.Free(building.type, building);
-
 			_OnBuildingRemoved(building);
 		}
 
