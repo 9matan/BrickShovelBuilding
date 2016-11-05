@@ -15,7 +15,11 @@ namespace BSB
 			get { return 0; }
 		}
 
-		public EBSBMapItemType mapItemType
+		public IBSBMapPlacement mapPlacement
+		{
+			get; set;
+		}
+		public EBSBMapItemType	mapItemType
 		{
 			get { return EBSBMapItemType.EMPTY; }
 		}

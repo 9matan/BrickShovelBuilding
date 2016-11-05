@@ -172,6 +172,7 @@ namespace BSB
 	{
 		int id { get; }
 		EBSBMapItemType mapItemType { get; }
+		IBSBMapPlacement mapPlacement { get; set; }
 	}
 
 }

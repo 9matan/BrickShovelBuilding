@@ -19,6 +19,8 @@ namespace BSB
 		int workersCapacity { get; }
 		int freeWorkersCapacity { get; }
 
+		BSBPrice income { get; }
+
 		void Use(IBSBReserves reserves);
 		bool Contains(IBSBReserves reserves);
 		void Restore(IBSBReserves reserves);
@@ -101,7 +103,8 @@ namespace BSB
 		{
 			get
 			{
-				return priceManager.Inflation(_income);
+				return priceManager.MaterialsIncomeInflation( 
+					priceManager.Inflation(_income));
 			}
 			set { _income = value; }
 		}

@@ -9,6 +9,8 @@ namespace BSB
 
 	public interface IBSBHouseBuildingManager
 	{
+		int houseCount { get; }
+
 		BSBPrice			GetHouseSellPrice(IBSBHouseBuilding house);
 		void				SellHouse(IBSBHouseBuilding house);
 		IBSBHouseBuilding	GetHouseById(int id);
@@ -19,7 +21,8 @@ namespace BSB
 	}
 
 
-	public class BSBHouseBuildingManager : MonoBehaviour 
+	public class BSBHouseBuildingManager : MonoBehaviour,
+		IBSBHouseBuildingManager
 	{
 
 		public IBSBBuildingManager	buildingManager
@@ -33,6 +36,11 @@ namespace BSB
 		public IBSBPlayerResources	playerResources
 		{
 			get { return BSBDirector.playerResources; }
+		}
+
+		public int houseCount
+		{
+			get { return _housesContainer.Count; }
 		}
 
 		[SerializeField]

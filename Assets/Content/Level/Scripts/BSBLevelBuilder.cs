@@ -10,10 +10,13 @@ namespace BSB
 
 		public const int INFINITY_CAPACITY = 10000000;
 
-
-		public IBSBPlayerResources	playerResources
+		public IBSBTrashManager		trashManager
 		{
-			get { return BSBDirector.playerResources; }
+			get { return BSBDirector.trashManager; }
+		}
+		public BSBPlayerResources	playerResources
+		{
+			get { return _playerResources; }
 		}
 		public IBSBMap				map
 		{
@@ -24,6 +27,8 @@ namespace BSB
 		protected BSBBuildingManager _buildingManager;
 		[SerializeField]
 		protected BSBWorkerManager _workerManager;
+		[SerializeField]
+		protected BSBPlayerResources _playerResources;
 		[SerializeField]
 		protected BSBPrice _startReserves;
 		[SerializeField]
@@ -36,6 +41,7 @@ namespace BSB
 			_level = __level;
 
 			_BuildBuildings();
+			_BuildTrashes();
 			_BuildReserves();			
 
 			_Test();
@@ -52,6 +58,8 @@ namespace BSB
 			_startReserves.workers = 0;
 
 			playerResources.Add(_startReserves);
+
+			playerResources.income += _startIncome;
 		}
 
 		protected void _BuildBuildings()
@@ -59,7 +67,18 @@ namespace BSB
 			var barrack = _buildingManager.BuildBuildingImmediatelyFree(EBSBBuildingType.BARRACKS);
 			map.SetMapItemToRandomEmptyPlacement(barrack);
 		}
-	
+
+		[SerializeField]
+		protected int _trashNumber = 2;
+
+		protected void _BuildTrashes()
+		{
+			for (int i = 0; i < _trashNumber; ++i)
+			{
+				map.SetMapItemToRandomEmptyPlacement(
+					trashManager.CreateTrash());
+			}
+		}
 	
 		protected void _Test()
 		{

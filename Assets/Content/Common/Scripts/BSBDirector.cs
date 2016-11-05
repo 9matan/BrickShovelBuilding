@@ -42,6 +42,26 @@ namespace BSB
 			}
 		}
 
+		public static IBSBHouseBuildingManager houseManager
+		{
+			get
+			{
+				if (buildingManager == null)
+					return null;
+				return buildingManager.houseManager;
+			}
+		}
+
+		public static IBSBShopBuildingManager shopManager
+		{
+			get
+			{
+				if (buildingManager == null)
+					return null;
+				return buildingManager.shopManager;
+			}
+		}
+
 		private static BSBBuildingManager _buildingManager;
 
 
@@ -99,6 +119,20 @@ namespace BSB
 		}
 
 		private static BSBMap _map;
+
+
+
+		public static IBSBTrashManager trashManager
+		{
+			get
+			{
+				if (_trashManager == null || _map.Equals(null))
+					_trashManager = GameObject.FindObjectOfType<BSBTrashManager>();
+				return _trashManager;
+			}
+		}
+
+		private static BSBTrashManager _trashManager;
 
 
 

@@ -54,10 +54,15 @@ namespace BSB
 
 		protected static int _ID = 0;
 
+		public IBSBMapPlacement		mapPlacement
+		{
+			get; set;
+		}
 		public EBSBMapItemType		mapItemType
 		{
 			get { return EBSBMapItemType.BUILDING; }
 		}
+
 		public int					id
 		{
 			get { return _id; }

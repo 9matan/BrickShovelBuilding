@@ -11,6 +11,8 @@ namespace BSB
 		IBSBBuildingManagerEvents
 	{
 		IBSBBarracksBuildingManager barracksManager { get; }
+		IBSBHouseBuildingManager	houseManager { get; }
+		IBSBShopBuildingManager		shopManager { get; }
 
 		IBSBBuilding	BuildBuilding(EBSBBuildingType type);
 		bool			TryBuild(EBSBBuildingType type);
@@ -51,10 +53,19 @@ namespace BSB
 			get { return BSBDirector.priceManager; }
 		}
 
-		public IBSBBarracksBuildingManager barracksManager
+		public IBSBBarracksBuildingManager	barracksManager
 		{
 			get { return _barracksManager; }
 		}
+		public IBSBHouseBuildingManager		houseManager
+		{
+			get { return _houseManager; }
+		}
+		public IBSBShopBuildingManager		shopManager
+		{
+			get { return _shopManager; }
+		}
+
 
 		[SerializeField]
 		protected BSBBuildingInfoContainer	_infoContainer;
@@ -340,6 +351,9 @@ namespace BSB
 				case EBSBBuildingType.BARRACKS:
 					_barracksManager.OnBarracksBuilt((BSBBarracksBuilding)building);
 					break;
+				case EBSBBuildingType.SHOP:
+					_shopManager.OnShopBuildingBuilt((BSBShopBuilding)building);
+					break;
 			}
 
 			onBuildingBuilt(building);
@@ -356,6 +370,9 @@ namespace BSB
 			{
 				case EBSBBuildingType.BARRACKS:
 					_barracksManager.OnBarracksUpgraded((BSBBarracksBuilding)building);
+					break;
+				case EBSBBuildingType.SHOP:
+					_shopManager.OnShopBuildingUpgraded((BSBShopBuilding)building);
 					break;
 			}
 

@@ -7,7 +7,8 @@ namespace BSB
 
 	public interface IBSBMaterialsManager
 	{
-		BSBPrice materialPrice { get; }
+		BSBPrice	materialPrice { get; }
+		int			purchasingQuantity { get; }
 
 		void BuyMaterials();
 		bool TryBuyMaterials();
@@ -30,6 +31,10 @@ namespace BSB
 		public BSBPrice materialPrice
 		{
 			get { return priceManager.GetMaterialPrice(_materialPrice); }
+		}
+		public int purchasingQuantity
+		{
+			get { return _purchasingQuantity; }
 		}
 
 		[Header("Price")]

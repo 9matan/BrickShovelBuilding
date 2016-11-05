@@ -8,8 +8,8 @@ namespace BSB
 
 	public interface IBSBShopBuildingManager :
 		IBSBShopBuildingManagerEvents
-	{ 
-
+	{
+		BSBPrice GetTotalIncome();
 	}
 
 	public interface IBSBShopBuildingManagerEvents
@@ -22,15 +22,19 @@ namespace BSB
 		IBSBShopBuildingManager
 	{
 
-		public IBSBBuildingManager	buildingManager
+		public IBSBBuildingManager		buildingManager
 		{
 			get { return BSBDirector.buildingManager; }
 		}
-		public IBSBPriceManager		priceManager
+		public IBSBHouseBuildingManager	houseManager
+		{
+			get { return BSBDirector.houseManager; }
+		}
+		public IBSBPriceManager			priceManager
 		{
 			get { return BSBDirector.priceManager; }
 		}
-		public IBSBPlayerResources	playerResources
+		public IBSBPlayerResources		playerResources
 		{
 			get { return BSBDirector.playerResources; }
 		}
@@ -55,6 +59,22 @@ namespace BSB
 		//
 
 
+			
+		public BSBPrice GetTotalIncome()
+		{
+			BSBPrice totalIncome = new BSBPrice();
+
+			foreach (var kvp in _shopsContainer)
+			{
+				var income = _info.GetIncomeByLevel(kvp.Value.level);
+				totalIncome.funds += (income.funds * houseManager.houseCount);
+				totalIncome.materials += income.materials;
+			}
+
+			return totalIncome;
+		}
+
+
 
 		public void AddShop(BSBShopBuilding shop)
 		{
@@ -73,7 +93,15 @@ namespace BSB
 		public event Events.OnShopBuildingAction onShopBuilt = delegate { };
 		public event Events.OnShopBuildingAction onShopUpgraded = delegate { };
 
-	//	public void OnShopBuildingBuilt
+		public void OnShopBuildingBuilt(BSBShopBuilding shop)
+		{
+			onShopBuilt(shop);
+		}
+
+		public void OnShopBuildingUpgraded(BSBShopBuilding shop)
+		{
+			onShopUpgraded(shop);
+		}
 
 		//
 		// </ Events >

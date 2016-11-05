@@ -67,6 +67,7 @@ namespace BSB
 
 			_mapItem.transform.SetParent(transform);
 			_mapItem.transform.localPosition = Vector3.zero;
+			_mapItem.mapPlacement = this;
 		}
 
 		//

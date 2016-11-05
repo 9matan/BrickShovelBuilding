@@ -7,12 +7,18 @@ namespace BSB
 
 	public interface IBSBPriceManager
 	{
+		float inflation { get; }
+		float materialsInflation { get; }
+		float buildingsInflation { get; }
+
 		BSBPrice GetBuildingPrice(BSBPrice price);
 		BSBPrice GetMaterialPrice(BSBPrice price);
 		BSBPrice GetWorkerPrice(BSBPrice price);
 		BSBPrice GetHouseSellPrice(BSBPrice price);
 		BSBPrice GetRepairPrice(BSBPrice price);
 
+
+		BSBPrice MaterialsIncomeInflation(BSBPrice price);
 		BSBPrice Inflation(BSBPrice price);
 	}
 
@@ -52,6 +58,11 @@ namespace BSB
 			return _Inflation(price);
 		}
 
+		public BSBPrice MaterialsIncomeInflation(BSBPrice price)
+		{
+			price.materials = ((int)((float)price.materials / _materialsInflation));
+			return price;
+		}
 
 
 		protected BSBPrice _Inflation(BSBPrice price)
@@ -70,6 +81,20 @@ namespace BSB
 		{
 			price.funds = (int)(_buildingsInflation * (float)price.funds);
 			return price;
+		}
+
+
+		public float inflation
+		{
+			get { return _inflation; }
+		}
+		public float materialsInflation
+		{
+			get { return _materialsInflation; }
+		}
+		public float buildingsInflation
+		{
+			get { return _buildingsInflation; }
 		}
 
 		[SerializeField]
