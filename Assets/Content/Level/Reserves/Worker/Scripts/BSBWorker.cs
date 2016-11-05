@@ -25,6 +25,7 @@ namespace BSB
 		public string workerName
 		{
 			get { return _workerName; }
+			set { _workerName = value; }
 		}
 
 		[SerializeField]

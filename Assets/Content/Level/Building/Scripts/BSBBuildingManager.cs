@@ -165,7 +165,7 @@ namespace BSB
 				return null;
 
 			var building = _CreateBuilding(type);
-			building.Initialize();
+			_InitializeBuilding(building);
 			_AddBuilding(building);
 			_OnBuildingBuild(building);
 			_BuildBuilding(building);			
@@ -184,7 +184,7 @@ namespace BSB
 		public IBSBBuilding BuildBuildingImmediatelyFree(EBSBBuildingType type)
 		{
 			var building = _CreateBuilding(type);
-			building.Initialize();
+			_InitializeBuilding(building);
 			_AddBuilding(building);
 			_OnBuildingBuild(building);
 			_BuildBuildingImmediatelyFree(building);
@@ -193,6 +193,11 @@ namespace BSB
 		}
 
 
+
+		protected void _InitializeBuilding(BSBBuilding building)
+		{
+			building.Initialize(_infoContainer[building.type]);
+		}
 
 		protected void _BuildBuilding(BSBBuilding building)
 		{

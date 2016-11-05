@@ -50,13 +50,13 @@ namespace BSB
 
 		protected void _BuildBuildings()
 		{
-			_buildingManager.BuildBuildingImmediatelyFree(EBSBBuildingType.BARRACKS);
+			_buildingManager.BuildBuildingImmediatelyFree(EBSBBuildingType.BARRACKS);			
 		}
 	
 	
 		protected void _Test()
 		{
-		//	buildingManager.BuildBuilding(EBSBBuildingType.BARRACKS);
+			_buildingManager.BuildBuilding(EBSBBuildingType.HOUSE);
 		}
 
 		//

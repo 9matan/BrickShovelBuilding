@@ -21,6 +21,7 @@ namespace BSB
 		EBSBBuildingType	type { get; }
 		int					level { get; }
 		EBSBBuildingState	state { get; }
+		IBSBBuildingInfo	info { get; }
 	}	
 
 	public interface IBSBBuildingEvents
@@ -67,23 +68,32 @@ namespace BSB
 		{
 			get { return _state; }
 		}
+		public IBSBBuildingInfo		info
+		{
+			get { return _info; }
+		}
 
-	//	[SerializeField]
-		protected EBSBBuildingType _type;
 		[SerializeField]
-		protected int _level;
+		protected int _level = 0;
 		[SerializeField]
-		protected EBSBBuildingState _state;
+		protected EBSBBuildingState _state = EBSBBuildingState.NONE;
+		[SerializeField]
+		protected BSBBuildingFace _face;
 
-		protected int _id;
+		protected EBSBBuildingType	_type = EBSBBuildingType.NONE;
+		protected IBSBBuildingInfo	_info;
+		protected int				_id = -1;
 
 		//
 		// < Initialize >
 		//
 
-		public void Initialize()
+		public void Initialize(IBSBBuildingInfo __info)
 		{
+			_info = __info;
 			_id = ++_ID;
+
+			_face.Initialize(this);
 		}
 
 		//
@@ -178,8 +188,10 @@ namespace BSB
 
 		public void Clear()
 		{
+			_face.Clear();
 			_ClearEvents();
 
+			_id = -1;
 			_level = 0;
 			_state = EBSBBuildingState.NONE;
 		}
@@ -203,6 +215,16 @@ namespace BSB
 		//
 		// </ Log >
 		//
+
+#if UNITY_EDITOR
+		
+		[ContextMenu("Upgrade")]
+		public void UpgradeBuilding()
+		{
+			BSBDirector.buildingManager.UpgradeBuilding(this);
+		}
+
+#endif
 
 	}
 

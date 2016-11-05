@@ -38,6 +38,7 @@ namespace BSB
 			get { return _capacity - _workers.Count; }
 		}
 
+		[Header("Barracks")]
 		[SerializeField]
 		protected int _capacity = 0;
 
