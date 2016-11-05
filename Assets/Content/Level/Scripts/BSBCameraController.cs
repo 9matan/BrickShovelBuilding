@@ -28,36 +28,34 @@ namespace BSB
 		{
 			get
 			{
-				return transform.position.y + realCameraArea.y - _cameraArea.y;
+				return transform.position.y + (realCameraArea.y - _cameraArea.y) * 0.5f;
 			}
 		}
 		public float worldBottomBound
 		{
 			get
 			{
-				return transform.position.y - realCameraArea.y + _cameraArea.y;
+				return transform.position.y - (realCameraArea.y + _cameraArea.y) * 0.5f;
 			}
 		}
 		public float worldLeftBound
 		{
 			get
 			{
-				return transform.position.x - realCameraArea.x + _cameraArea.x;
+				return transform.position.x - (realCameraArea.x + _cameraArea.x) * 0.5f;
 			}
 		}
 		public float worldRightBound
 		{
 			get
 			{
-				return transform.position.x + realCameraArea.x - _cameraArea.x;
+				return transform.position.x + (realCameraArea.x - _cameraArea.x) * 0.5f;
 			}
 		}
-		
-		
 
 		public Vector2 realCameraArea
 		{
-			get { return _cameraArea * _size; }
+			get { return _cameraArea * _size * resolutionCeof; }
 		}
 
 		public float size
@@ -66,8 +64,15 @@ namespace BSB
 			set { _size = value; }
 		}
 
+		public float resolutionCeof
+		{
+			get { return _resolutionCeof; }
+		}
+
 		[SerializeField]
 		protected Camera _camera;
+		[SerializeField]
+		protected float _resolutionCeof;
 		[SerializeField]
 		protected Vector2 _cameraArea = new Vector2(15.0f, 5.0f);
 		[SerializeField]

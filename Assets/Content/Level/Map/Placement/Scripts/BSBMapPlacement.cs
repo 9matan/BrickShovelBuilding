@@ -57,10 +57,10 @@ namespace BSB
 
 		public bool IsHere(Vector3 worldPosition)
 		{
-			return worldPosition.x >= transform.position.x - _triggerArea.x
-				&& worldPosition.x <= transform.position.x + _triggerArea.x
-				&& worldPosition.y >= transform.position.y - _triggerArea.y
-				&& worldPosition.y <= transform.position.y + _triggerArea.y;
+			return worldPosition.x >= transform.position.x - _triggerArea.x * 0.5f
+				&& worldPosition.x <= transform.position.x + _triggerArea.x * 0.5f
+				&& worldPosition.y >= transform.position.y - _triggerArea.y * 0.5f
+				&& worldPosition.y <= transform.position.y + _triggerArea.y * 0.5f;
 		}
 
 		public void SetMapItem(IBSBMapItem __mapItem)

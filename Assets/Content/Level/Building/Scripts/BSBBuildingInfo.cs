@@ -71,7 +71,8 @@ namespace BSB
 			if (GetLevelUpgradingSpritesCount(level) == 0)
 				return GetSpriteByLevel(level);
 
-			return _levels[level].upgradingSprites[index];
+			return _levels[level].upgradingSprites[
+				Mathf.Min(index, _levels[level].upgradingSprites.Length - 1)];
 		}
 		
 		public int GetLevelUpgradingSpritesCount(int level)

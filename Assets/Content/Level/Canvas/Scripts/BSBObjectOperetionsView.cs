@@ -12,19 +12,27 @@ namespace BSB
 
 		[SerializeField]
 		protected List<BSBObjectOperetionView> _viewsList = new List<BSBObjectOperetionView>();
+		[SerializeField]
+		protected Image _hpui;
+
+		protected IBSBMapPlacement _current;
 
 		public bool SetToItem(IBSBMapPlacement placement)
+		{
+			Reset();
+			return _SetToItem(placement);
+		}
+
+		protected bool _SetToItem(IBSBMapPlacement placement)
 		{
 			var operList = _GetOperations(placement.mapItem);
 			if (operList == null)
 				return false;
 
-			var pos = placement.transform.position;
-			pos.y += 1.0f;
-			transform.position = pos;
+			_current = placement;
+			transform.position = placement.transform.position;
 
-			
-			for(int i = 0; i < operList.Count; ++i)
+			for (int i = 0; i < operList.Count; ++i)
 			{
 				_viewsList[i].gameObject.Show();
 				_viewsList[i].SetOperation(operList[i]);
@@ -56,6 +64,16 @@ namespace BSB
 		{
 			if (building.state != EBSBBuildingState.IDLE) return null;
 
+			if (building.type == EBSBBuildingType.HOUSE)
+			{
+				var house = BSBDirector.houseManager.GetHouseById(building.id);
+				if (house.isSoldOut)
+				{
+					_hpui.transform.parent.parent.gameObject.Show();
+					_hpui.fillAmount = (float)house.health / (float)house.maxHealth;
+				}
+			}
+
 			return BSBDirector.buildingManager.GetOperations(building);
 		}
 
@@ -73,9 +91,18 @@ namespace BSB
 		// </ SetCurrentItem >
 		//
 
+		protected void Update()
+		{
+			if (_current == null) return;
+
+			_SetToItem(_current);
+		}
+
 		public void Reset()
 		{
-			for(int i = 0; i < _viewsList.Count; ++i)
+			_current = null;
+			_hpui.transform.parent.parent.gameObject.Hide();
+			for (int i = 0; i < _viewsList.Count; ++i)
 			{
 				_viewsList[i].Reset();
 				_viewsList[i].gameObject.Hide();

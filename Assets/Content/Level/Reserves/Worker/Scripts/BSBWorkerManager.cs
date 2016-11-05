@@ -9,6 +9,8 @@ namespace BSB
 	public interface IBSBWorkerManager
 	{
 		BSBPrice workerPrice { get; }
+    bool TryHireWorker();
+    void HireWorker();
 	}
 
 	public class BSBWorkerManager : MonoBehaviour,

@@ -121,6 +121,7 @@ namespace BSB
 
 		public void AddHouse(BSBHouseBuilding house)
 		{
+			_ListenHouse(house);
 			_housesContainer.Add(house.id, house);
 		}
 

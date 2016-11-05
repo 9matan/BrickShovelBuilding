@@ -9,6 +9,7 @@ namespace BSB
 	public interface IBSBLevelCanvas
 	{
 		Canvas canvas { get; }
+		void ShowGameOver();
 	}
 
 	[RequireComponent(typeof(Canvas))]
@@ -34,13 +35,15 @@ namespace BSB
 
 		[SerializeField]
 		protected BSBObjectOperetionsView _operations;
+		[SerializeField]
+		protected GameObject _gameOver;
 
 		protected Canvas _canvas;
 
 
 		public void Initialize()
 		{
-
+			
 		}
 
 
@@ -62,6 +65,12 @@ namespace BSB
 			isOperationsActive = false;
 		}
 
+
+		public void ShowGameOver()
+		{
+			_gameOver.Show();
+		}
+		
 
 		//
 		// < Log >

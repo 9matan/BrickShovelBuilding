@@ -121,6 +121,9 @@ namespace BSB
 
 		public BSBPrice UpgradePrice(IBSBBuilding building)
 		{
+			if (MaxBuildingLevel(building) == building.level)
+				return new BSBPrice();
+
 			return priceManager.GetBuildingPrice(
 				_infoContainer[building.type].
 				GetPriceByLevel(building.level + 1));
@@ -404,8 +407,11 @@ namespace BSB
 			var list = _GetOperationsList(ibuilding);
 			var building = _GetBuildingById(ibuilding.id);
 
-			list.Add(
-				_GetUpgradeOperation(building));
+			if (MaxBuildingLevel(building) > building.level)
+			{
+				list.Add(
+					_GetUpgradeOperation(building));
+			}
 
 			return list;
 		}
