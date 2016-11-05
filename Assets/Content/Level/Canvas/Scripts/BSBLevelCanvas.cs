@@ -27,12 +27,36 @@ namespace BSB
 			}
 		}
 
+		public bool isOperationsActive
+		{
+			get; protected set;
+		}
+
+		[SerializeField]
+		protected BSBObjectOperetionsView _operations;
+
 		protected Canvas _canvas;
 
 
 		public void Initialize()
 		{
 
+		}
+
+
+
+		public void ActivateOperations(IBSBMapPlacement placement)
+		{
+			isOperationsActive = true;
+			_operations.gameObject.Show();
+			_operations.SetToItem(placement);
+		}
+		
+		public void DeactivateOperations()
+		{
+			_operations.Reset();
+			_operations.gameObject.Hide();
+			isOperationsActive = false;
 		}
 
 

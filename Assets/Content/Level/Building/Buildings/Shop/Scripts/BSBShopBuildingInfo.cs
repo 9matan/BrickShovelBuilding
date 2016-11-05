@@ -18,6 +18,7 @@ namespace BSB
 		IBSBShopBuildingInfo
 	{
 
+		[System.Serializable]
 		public class ShopLevelInfo
 		{
 			public BSBPrice income;

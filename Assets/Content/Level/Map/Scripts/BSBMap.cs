@@ -19,6 +19,8 @@ namespace BSB
 
 		List<IBSBObjectOperation> GetEmptyOperations(IBSBMapEmptyItem empty);
 
+		IBSBMapPlacement	activePlacement { get; }
+
 		IBSBMapPlacement	GetRandomEmptyPlacement();
 		IBSBMapPlacement	GetPlacementByWorldPosition(Vector3 worldPosition);
 		void				SetMapItem(IBSBMapPlacement iplacement, IBSBMapItem item);
@@ -29,6 +31,7 @@ namespace BSB
 	public interface IBSBMapEvents
 	{
 		event Events.OnMapAction onPlacementSelected;
+		event Events.OnMapAction onPlacementDeselected;
 	}
 
 	public class BSBMap : MonoBehaviour,
@@ -51,6 +54,14 @@ namespace BSB
 		public IBSBBarracksBuildingManager	barracksManager
 		{
 			get { return BSBDirector.barracksManager; }
+		}
+
+		public IBSBMapPlacement				activePlacement
+		{
+			get
+			{
+				return _activePlacement;
+			}
 		}
 
 		public new Camera	camera
@@ -101,7 +112,7 @@ namespace BSB
 
 		protected void _ListenManipulator(IVOSManipulator manipulator)
 		{
-			manipulator.onPressed += _OnManipulatorPressed;
+			manipulator.onPressed += _OnManipulatorReleased;
 		}
 
 		protected void _AddPlacement(BSBMapPlacement placement)
@@ -197,17 +208,22 @@ namespace BSB
 		// < Manipulator >
 		//
 
-		protected void _OnManipulatorPressed(IVOSManipulator control)
+		protected void _OnManipulatorReleased(IVOSManipulator control)
 		{
-			if (!selectionOn) return;
-
 			var position = control.ToWorldPosition(camera);
+			var placement = GetPlacementByWorldPosition(position);
 
-			Log("Pos: " + position);
-			_activePlacement = GetPlacementByWorldPosition(position);
-			if (_activePlacement != null)
-				Log("Active: " + _activePlacement.id);
-			_OnPlacementSelected();
+			if (placement == null)
+			{
+				if (_activePlacement != null)
+					_OnPlacementDeselected();
+				_activePlacement = placement;
+			}
+			else if (selectionOn)
+			{
+				_activePlacement = placement;
+				_OnPlacementSelected();
+			}			
 		}
 
 		//
@@ -219,10 +235,16 @@ namespace BSB
 		//
 
 		public event Events.OnMapAction onPlacementSelected = delegate { };
+		public event Events.OnMapAction onPlacementDeselected = delegate { };
 
 		protected void _OnPlacementSelected()
 		{
 			onPlacementSelected(this);
+		}
+
+		protected void _OnPlacementDeselected()
+		{
+			onPlacementDeselected(this);
 		}
 
 		//

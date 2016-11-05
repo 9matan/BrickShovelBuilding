@@ -137,7 +137,9 @@ namespace BSB
 						CleaningTrash(trash);
 					}
 				},
-				BSBObjectOperationInfo.Create(_info.cleaningOperationSprite),
+				BSBObjectOperationInfo.Create(
+					_info.cleaningOperationSprite,
+					() => { return CleaningTrashPrice(trash); }),
 				(IBSBObjectOperation oper) =>
 				{
 					return TryCleaningTrash(trash);

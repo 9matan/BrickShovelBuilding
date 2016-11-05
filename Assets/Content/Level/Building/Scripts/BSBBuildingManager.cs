@@ -432,7 +432,9 @@ namespace BSB
 						UpgradeBuilding(building);
 					}
 				},
-				BSBObjectOperationInfo.Create(_infoContainer[building.type].upgradeOperationSprite),
+				BSBObjectOperationInfo.Create(
+					_infoContainer[building.type].upgradeOperationSprite,
+					() => { return UpgradePrice(building); }),
 				(IBSBObjectOperation oper) =>
 				{
 					return building.id >= 0 && TryUpgrade(building) && building.state == EBSBBuildingState.IDLE;
@@ -442,7 +444,9 @@ namespace BSB
 
 		public IBSBObjectOperationInfo GetBuildOperationInfo(EBSBBuildingType type)
 		{
-			return BSBObjectOperationInfo.Create(_infoContainer[type].buildOperationSprite);
+			return BSBObjectOperationInfo.Create(
+				_infoContainer[type].buildOperationSprite,
+				() => { return BuildPrice(type); });
 		}
 
 		//

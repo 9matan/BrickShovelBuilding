@@ -10,6 +10,7 @@ namespace BSB
 
 	namespace Events
 	{
+		public delegate BSBPrice ReactivePrice();
 		public delegate void OnOperationAction(IBSBObjectOperation operation);
 		public delegate bool OperationValidy(IBSBObjectOperation operation);
 	}
@@ -37,6 +38,7 @@ namespace BSB
 	public interface IBSBObjectOperationInfo
 	{
 		Sprite operationSprite { get; }
+		BSBPrice operationPrice { get; }
 	}
 
 	public class BSBObjectOperationInfo :
@@ -47,12 +49,20 @@ namespace BSB
 		{
 			get; set;
 		}
+		public BSBPrice operationPrice
+		{
+			get { return _price(); }
+		}
+
+		protected Events.ReactivePrice _price;
 
 		public static BSBObjectOperationInfo Create(
-			Sprite __operationSprite)
+			Sprite __operationSprite,
+			Events.ReactivePrice __operationPrice)
 		{
 			var info = new BSBObjectOperationInfo();
 			info.operationSprite = __operationSprite;
+			info._price = __operationPrice;
 			return info;
 		}
 

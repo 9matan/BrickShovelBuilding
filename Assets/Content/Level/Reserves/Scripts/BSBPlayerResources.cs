@@ -108,13 +108,30 @@ namespace BSB
 			get
 			{
 				return priceManager.MaterialsIncomeInflation( 
-					priceManager.Inflation(_income));
+					priceManager.Inflation(_income + _startIncome));
 			}
-			set { _income = value; }
+			set
+			{
+				_income = value;
+			}
+		}
+
+		public BSBPrice startIncome
+		{
+			get
+			{
+				return _startIncome;
+			}
+			set
+			{
+				_startIncome = value;
+			}
 		}
 
 		[SerializeField]
 		protected BSBPrice _income;
+		[SerializeField]
+		protected BSBPrice _startIncome;
 
 		protected BSBReservesStorage _reserves = new BSBReservesStorage();
 
@@ -128,6 +145,7 @@ namespace BSB
 			_InitializeReserves();
 
 			_ListenBarracksManager(barracksManager);
+			_ListenShopManager(shopManager);
 			_ListenTimeManager(timeManager);
 
 			isInit = true;
@@ -233,7 +251,7 @@ namespace BSB
 
 		protected void _UpdateIncome()
 		{
-			_income = shopManager.GetTotalIncome();
+			income = shopManager.GetTotalIncome();
 		}
 
 		protected void _UpdateWorkersCapacity(int delta)

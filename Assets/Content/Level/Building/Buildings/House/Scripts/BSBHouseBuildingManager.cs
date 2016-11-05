@@ -146,11 +146,6 @@ namespace BSB
 		// < Events >
 		//
 
-		public void OnHauseUpgraded()
-		{
-
-		}
-
 		protected void _OnHouseDestruction(IBSBBuilding house)
 		{
 			buildingManager.RemoveBuilding(house);
@@ -183,7 +178,9 @@ namespace BSB
 						RepairHouse(house);
 					}
 				},
-				BSBObjectOperationInfo.Create(_info.repairOperationSprite),
+				BSBObjectOperationInfo.Create(
+					_info.repairOperationSprite,
+					() => { return RepairPrice(house); }),
 				(IBSBObjectOperation oper) => 
 				{
 					return house.id >= 0 
@@ -205,7 +202,9 @@ namespace BSB
 						SellHouse(house);
 					}
 				},
-				BSBObjectOperationInfo.Create(_info.sellOperationSprite),
+				BSBObjectOperationInfo.Create(
+					_info.sellOperationSprite,
+					() => { return GetHouseSellPrice(house); }),
 				(IBSBObjectOperation oper) =>
 				{
 					return house.id >= 0 

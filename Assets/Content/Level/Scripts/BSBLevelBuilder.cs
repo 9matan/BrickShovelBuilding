@@ -59,7 +59,7 @@ namespace BSB
 
 			playerResources.Add(_startReserves);
 
-			playerResources.income += _startIncome;
+			playerResources.startIncome += _startIncome;
 		}
 
 		protected void _BuildBuildings()
@@ -82,7 +82,8 @@ namespace BSB
 	
 		protected void _Test()
 		{
-	//		_buildingManager.BuildBuilding(EBSBBuildingType.HOUSE);
+	//		map.SetMapItemToRandomEmptyPlacement(
+	//			_buildingManager.BuildBuilding(EBSBBuildingType.SHOP));
 		}
 
 		//
